@@ -683,54 +683,76 @@ function GameSelectionScreen({ onSelectGame }) {
   ];
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'h-screen overflow-hidden flex flex-col'
   },
-    // Header
+    // Header - Compact mobile design
     React.createElement('div', {
-      className: 'flex justify-between items-center mb-8 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
+      className: 'flex-shrink-0 flex justify-between items-center p-3 sm:p-4 bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20'
     },
       React.createElement('div', { className: 'text-white' },
-        React.createElement('h2', { className: 'text-xl font-bold' }, `שלום, ${user.username}`),
-        React.createElement('p', { className: 'text-blue-200' }, `נקודות: ${user.points}`)
+        React.createElement('h2', { className: 'text-lg sm:text-xl font-bold' }, `שלום, ${user.username}`),
+        React.createElement('p', { className: 'text-blue-200 text-sm' }, `נקודות: ${user.points}`)
       ),
       React.createElement('button', {
         onClick: logout,
-        className: 'px-4 py-2 bg-red-500 bg-opacity-20 border border-red-400 text-red-200 rounded-lg hover:bg-opacity-30 transition-all'
+        className: 'px-3 py-1 sm:px-4 sm:py-2 bg-red-500 bg-opacity-20 border border-red-400 text-red-200 rounded-lg hover:bg-opacity-30 transition-all text-sm'
       }, t('nav.logout'))
     ),
     
-    // Game selection
-    React.createElement('div', { className: 'max-w-2xl mx-auto' },
-      React.createElement('h1', {
-        className: 'text-4xl font-bold text-white text-center mb-8'
-      }, 'בחר סוג משחק'),
+    // Main content area - Flexible layout for mobile landscape
+    React.createElement('div', { 
+      className: 'flex-1 flex flex-col justify-center p-4 overflow-hidden'
+    },
+      // Title
+      React.createElement('div', { className: 'text-center mb-4 sm:mb-6' },
+        React.createElement('h1', {
+          className: 'text-2xl sm:text-3xl md:text-4xl font-bold text-white'
+        }, 'בחר סוג משחק')
+      ),
       
-      React.createElement('div', { className: 'space-y-4' },
-        gameTypes.map(game => 
-          React.createElement('button', {
-            key: game.id,
-            onClick: () => game.enabled && onSelectGame(game.id),
-            disabled: !game.enabled,
-            className: `w-full p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-xl hover:bg-opacity-20 transition-all ${game.enabled ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}`
-          },
-            React.createElement('div', { className: 'flex items-center' },
-              React.createElement('div', {
-                className: 'text-4xl ml-4'
-              }, game.icon),
-              React.createElement('div', { className: 'text-right flex-1' },
-                React.createElement('h3', {
-                  className: 'text-2xl font-bold text-white mb-2'
-                }, game.name),
-                React.createElement('p', {
-                  className: 'text-blue-200'
-                }, game.description),
-                !game.enabled && React.createElement('span', {
-                  className: 'inline-block mt-2 px-3 py-1 bg-yellow-500 bg-opacity-20 border border-yellow-400 text-yellow-200 rounded-full text-sm'
-                }, t('game.coming_soon'))
+      // Game selection - Optimized for mobile landscape
+      React.createElement('div', { 
+        className: 'flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full'
+      },
+        React.createElement('div', { 
+          className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4'
+        },
+          gameTypes.map(game => 
+            React.createElement('button', {
+              key: game.id,
+              onClick: () => game.enabled && onSelectGame(game.id),
+              disabled: !game.enabled,
+              className: `p-4 sm:p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl sm:rounded-2xl shadow-xl hover:bg-opacity-20 transition-all transform hover:scale-105 ${game.enabled ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}`
+            },
+              React.createElement('div', { className: 'flex flex-col sm:flex-row items-center text-center sm:text-right' },
+                // Icon
+                React.createElement('div', {
+                  className: 'text-3xl sm:text-4xl mb-2 sm:mb-0 sm:ml-4'
+                }, game.icon),
+                
+                // Content
+                React.createElement('div', { className: 'flex-1' },
+                  React.createElement('h3', {
+                    className: 'text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2'
+                  }, game.name),
+                  React.createElement('p', {
+                    className: 'text-blue-200 text-xs sm:text-sm leading-tight'
+                  }, game.description),
+                  !game.enabled && React.createElement('span', {
+                    className: 'inline-block mt-2 px-2 py-1 bg-yellow-500 bg-opacity-20 border border-yellow-400 text-yellow-200 rounded-full text-xs'
+                  }, t('game.coming_soon'))
+                )
               )
             )
           )
         )
+      ),
+      
+      // Footer info (compact)
+      React.createElement('div', { 
+        className: 'text-center mt-4 text-white text-opacity-60 text-xs sm:text-sm'
+      },
+        React.createElement('p', null, 'בחר משחק והתחל לשחק נגד שחקנים אמיתיים ובוטים חכמים')
       )
     )
   );
