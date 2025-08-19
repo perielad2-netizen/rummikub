@@ -1,0 +1,397 @@
+/* Custom styles for Rummikub game */
+
+/* Mobile-first responsive design */
+@media (orientation: landscape) and (max-height: 640px) {
+  .game-container {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .game-header {
+    height: 60px;
+  }
+  
+  .player-hand {
+    max-height: 120px;
+  }
+}
+
+/* RTL Support enhancements */
+[dir="rtl"] .rtl\:flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rtl\:text-right {
+  text-align: right;
+}
+
+[dir="rtl"] .rtl\:mr-2 {
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .rtl\:ml-2 {
+  margin-left: 0.5rem;
+}
+
+/* Game tile animations */
+.tile {
+  transition: all 0.2s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.tile.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg) scale(1.1);
+  z-index: 1000;
+}
+
+.tile.selected {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+  border-color: #ffc107 !important;
+}
+
+/* Drop zones */
+.drop-zone {
+  transition: all 0.2s ease;
+  min-height: 80px;
+}
+
+.drop-zone.drag-over {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  border-color: #22c55e !important;
+  transform: scale(1.02);
+}
+
+/* Touch-friendly buttons */
+.touch-button {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Custom scrollbar for mobile */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Loading animations */
+.loading-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Card table background */
+.game-table {
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(0, 100, 0, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(0, 150, 0, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(0, 80, 0, 0.4) 0%, rgba(0, 120, 0, 0.4) 100%);
+}
+
+/* Tile colors - accurate Rummikub colors */
+.tile-red {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.tile-blue {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.tile-black {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.tile-yellow {
+  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+  color: #1f2937;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+.tile-joker {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Game board layout improvements */
+.game-board-landscape {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
+/* Player hand optimizations */
+.player-hand-container {
+  background: rgba(101, 67, 33, 0.3);
+  border-top: 2px solid rgba(101, 67, 33, 0.5);
+}
+
+.player-hand-tiles {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 8px;
+  gap: 4px;
+}
+
+/* Responsive tile sizing */
+.tile-xs {
+  width: 32px;
+  height: 48px;
+  font-size: 10px;
+}
+
+.tile-sm {
+  width: 40px;
+  height: 60px;
+  font-size: 12px;
+}
+
+.tile-md {
+  width: 48px;
+  height: 72px;
+  font-size: 14px;
+}
+
+.tile-lg {
+  width: 56px;
+  height: 84px;
+  font-size: 16px;
+}
+
+/* Modal improvements */
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* Button enhancements */
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Table sets styling */
+.table-set {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  min-height: 80px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.table-set.valid {
+  border-color: rgba(34, 197, 94, 0.5);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.table-set.invalid {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Notification styles */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease;
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.notification.info {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Admin panel specific styles */
+.admin-stats-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.admin-stats-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Language toggle specific */
+.language-toggle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.language-toggle:hover {
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .tile {
+    width: 36px;
+    height: 54px;
+    font-size: 11px;
+  }
+  
+  .player-hand-tiles {
+    gap: 2px;
+  }
+  
+  .game-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .game-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tile {
+    width: 32px;
+    height: 48px;
+    font-size: 10px;
+  }
+  
+  .modal-content {
+    margin: 16px;
+  }
+}
+
+/* Accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles */
+.focus\:ring-2:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .tile {
+    border: 2px solid currentColor;
+  }
+  
+  .drop-zone {
+    border: 3px dashed currentColor;
+  }
+}
