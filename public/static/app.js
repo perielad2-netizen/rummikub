@@ -439,10 +439,10 @@ function App() {
   return React.createElement('div', {
     className: 'h-screen overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900'
   },
-    // Language toggle button - positioned to not conflict with logout
+    // Language toggle button - positioned at top center to avoid conflicts
     React.createElement('button', {
       onClick: toggleLanguage,
-      className: 'fixed top-4 right-20 z-50 bg-white bg-opacity-20 backdrop-blur-sm text-white px-3 py-2 rounded-lg hover:bg-opacity-30 transition-all text-sm'
+      className: 'fixed top-2 left-1/2 transform -translate-x-1/2 z-50 bg-white bg-opacity-20 backdrop-blur-sm text-white px-2 py-1 rounded-lg hover:bg-opacity-30 transition-all text-xs'
     }, language === 'he' ? 'English' : 'עברית'),
     
     // Main content
