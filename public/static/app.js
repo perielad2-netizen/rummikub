@@ -672,22 +672,24 @@ function GameSelectionScreen({ onSelectGame }) {
       icon: '🎲',
       enabled: true,
       description: 'משחק מהיר - 15 קלפים ורצף אחד'
-    },
-    {
-      id: 'rummy51',
-      name: t('game.rummy51'),
-      icon: '🃏',
-      enabled: false,
-      description: 'בקרוב - גרסה מתקדמת'
     }
   ];
   
   return React.createElement('div', {
-    className: 'h-screen overflow-hidden flex flex-col'
+    className: 'h-screen overflow-hidden flex flex-col relative'
   },
-    // Header - Compact mobile design
+    // Language Toggle Button - Positioned properly
+    React.createElement('button', {
+      className: 'absolute top-3 left-3 z-50 px-3 py-1 bg-black bg-opacity-50 backdrop-blur-md border border-white border-opacity-20 text-white text-sm rounded-lg hover:bg-opacity-70 transition-all',
+      onClick: () => {
+        // Toggle language functionality can be added here
+        console.log('Language toggle clicked');
+      }
+    }, 'English'),
+    
+    // Header - Compact mobile design with proper spacing
     React.createElement('div', {
-      className: 'flex-shrink-0 flex justify-between items-center p-3 sm:p-4 bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20'
+      className: 'flex-shrink-0 flex justify-between items-center p-2 sm:p-3 bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20'
     },
       React.createElement('div', { className: 'text-white' },
         React.createElement('h2', { className: 'text-lg sm:text-xl font-bold' }, `שלום, ${user.username}`),
@@ -703,10 +705,10 @@ function GameSelectionScreen({ onSelectGame }) {
     React.createElement('div', { 
       className: 'flex-1 flex flex-col justify-center p-4 overflow-hidden'
     },
-      // Title
-      React.createElement('div', { className: 'text-center mb-4 sm:mb-6' },
+      // Title - Fixed for mobile landscape
+      React.createElement('div', { className: 'text-center mb-3 sm:mb-4' },
         React.createElement('h1', {
-          className: 'text-2xl sm:text-3xl md:text-4xl font-bold text-white'
+          className: 'text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight'
         }, 'בחר סוג משחק')
       ),
       
