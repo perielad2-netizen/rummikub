@@ -676,17 +676,8 @@ function GameSelectionScreen({ onSelectGame }) {
   ];
   
   return React.createElement('div', {
-    className: 'h-screen overflow-hidden flex flex-col relative'
+    className: 'h-screen overflow-hidden flex flex-col'
   },
-    // Language Toggle Button - Positioned properly
-    React.createElement('button', {
-      className: 'absolute top-3 left-3 z-50 px-3 py-1 bg-black bg-opacity-50 backdrop-blur-md border border-white border-opacity-20 text-white text-sm rounded-lg hover:bg-opacity-70 transition-all',
-      onClick: () => {
-        // Toggle language functionality can be added here
-        console.log('Language toggle clicked');
-      }
-    }, 'English'),
-    
     // Header - Compact mobile design with proper spacing
     React.createElement('div', {
       className: 'flex-shrink-0 flex justify-between items-center p-2 sm:p-3 bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20'
