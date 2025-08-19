@@ -122,8 +122,6 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
           )
         )
       )
-        )
-      )
     ),
     
     // Modals
