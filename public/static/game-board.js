@@ -273,7 +273,7 @@ function GameBoardScreen({ roomData, gameType, wsManager, onGameEnd }) {
   
   if (loading) {
     return React.createElement('div', {
-      className: 'flex items-center justify-center min-h-screen'
+      className: 'flex items-center justify-center h-screen'
     },
       React.createElement('div', {
         className: 'animate-spin rounded-full h-32 w-32 border-b-2 border-white'
@@ -502,7 +502,7 @@ function AdminPanel({ onBack }) {
   
   if (loading) {
     return React.createElement('div', {
-      className: 'flex items-center justify-center min-h-screen'
+      className: 'flex items-center justify-center h-screen'
     },
       React.createElement('div', {
         className: 'animate-spin rounded-full h-32 w-32 border-b-2 border-white'
@@ -511,7 +511,7 @@ function AdminPanel({ onBack }) {
   }
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'h-screen overflow-hidden flex flex-col p-4'
   },
     // Header
     React.createElement('div', {
@@ -547,10 +547,11 @@ function AdminPanel({ onBack }) {
       )
     ),
     
-    // Tab content
-    React.createElement('div', {
-      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6'
-    },
+    // Tab content - scrollable area
+    React.createElement('div', { className: 'flex-1 overflow-auto' },
+      React.createElement('div', {
+        className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6'
+      },
       activeTab === 'users' && React.createElement(UsersTab, {
         users,
         onToggleApproval: toggleUserApproval,
@@ -560,6 +561,7 @@ function AdminPanel({ onBack }) {
       activeTab === 'stats' && React.createElement(StatsTab, { stats }),
       
       activeTab === 'activities' && React.createElement(ActivitiesTab, { activities })
+      )
     )
   );
 }

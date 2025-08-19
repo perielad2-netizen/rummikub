@@ -33,7 +33,7 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'h-screen overflow-hidden flex flex-col p-4'
   },
     // Header
     React.createElement('div', {
@@ -54,8 +54,9 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
       }, `${user.points} ${t('game.points')}`)
     ),
     
-    // Room options
-    React.createElement('div', { className: 'max-w-2xl mx-auto space-y-4' },
+    // Room options - scrollable content area
+    React.createElement('div', { className: 'flex-1 overflow-auto' },
+      React.createElement('div', { className: 'max-w-2xl mx-auto space-y-4' },
       // Create Private Room
       React.createElement('button', {
         onClick: () => setShowCreateModal(true),
@@ -119,6 +120,7 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
                 )
               )
             )
+      )
       )
     ),
     
@@ -378,7 +380,7 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
   
   if (loading) {
     return React.createElement('div', {
-      className: 'flex items-center justify-center min-h-screen'
+      className: 'flex items-center justify-center h-screen'
     },
       React.createElement('div', {
         className: 'animate-spin rounded-full h-32 w-32 border-b-2 border-white'
@@ -393,7 +395,7 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'h-screen overflow-hidden flex flex-col p-4'
   },
     // Header
     React.createElement('div', {
@@ -415,8 +417,9 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
       }, `${room?.entry_points} ${t('game.points')}`)
     ),
     
-    // Waiting area
-    React.createElement('div', { className: 'max-w-2xl mx-auto' },
+    // Waiting area - scrollable content
+    React.createElement('div', { className: 'flex-1 overflow-auto' },
+      React.createElement('div', { className: 'max-w-2xl mx-auto' },
       React.createElement('div', {
         className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 text-center'
       },
@@ -461,6 +464,7 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
             className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-white'
           })
         )
+      )
       )
     )
   );

@@ -371,7 +371,7 @@ function App() {
   
   if (loading) {
     return React.createElement('div', {
-      className: 'flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900'
+      className: 'flex items-center justify-center h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900'
     }, 
       React.createElement('div', {
         className: 'animate-spin rounded-full h-32 w-32 border-b-2 border-white'
