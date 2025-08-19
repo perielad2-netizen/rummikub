@@ -437,7 +437,7 @@ function App() {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900'
+    className: 'h-screen overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900'
   },
     // Language toggle button
     React.createElement('button', {
@@ -450,7 +450,7 @@ function App() {
   );
 }
 
-// Authentication Screen Component
+// Authentication Screen Component - Mobile First Landscape
 function AuthScreen({ onLogin, onRegister }) {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -499,96 +499,153 @@ function AuthScreen({ onLogin, onRegister }) {
   };
   
   return React.createElement('div', {
-    className: 'flex items-center justify-center min-h-screen p-4'
+    className: 'h-screen overflow-hidden flex items-center justify-center p-2 sm:p-4'
   },
     React.createElement('div', {
-      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 w-full max-w-md shadow-2xl'
+      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-xl w-full max-w-6xl h-full max-h-[600px] flex flex-col sm:flex-row shadow-2xl overflow-hidden'
     },
-      // Header
-      React.createElement('div', { className: 'text-center mb-8' },
-        React.createElement('h1', {
-          className: 'text-3xl font-bold text-white mb-2'
-        }, t('app.title')),
-        React.createElement('p', {
-          className: 'text-blue-200'
-        }, isLogin ? t('auth.login') : t('auth.register'))
+      // Left side - Branding (hidden on very small screens)
+      React.createElement('div', {
+        className: 'hidden sm:flex sm:w-1/2 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-6 flex-col justify-center items-center text-white'
+      },
+        React.createElement('div', { className: 'text-center' },
+          React.createElement('div', { className: 'text-6xl mb-4' }, '🎲'),
+          React.createElement('h1', {
+            className: 'text-3xl md:text-4xl font-bold mb-4'
+          }, t('app.title')),
+          React.createElement('p', {
+            className: 'text-blue-100 text-lg opacity-90'
+          }, 'משחק הקלפים המותאם לנייד'),
+          React.createElement('div', { className: 'mt-8 grid grid-cols-2 gap-4 text-sm' },
+            React.createElement('div', { className: 'bg-white bg-opacity-20 rounded-lg p-3' },
+              React.createElement('div', { className: 'font-semibold' }, 'מולטיפלייר'),
+              React.createElement('div', { className: 'opacity-75' }, 'בזמן אמת')
+            ),
+            React.createElement('div', { className: 'bg-white bg-opacity-20 rounded-lg p-3' },
+              React.createElement('div', { className: 'font-semibold' }, 'בוטים חכמים'),
+              React.createElement('div', { className: 'opacity-75' }, '800+ שמות')
+            ),
+            React.createElement('div', { className: 'bg-white bg-opacity-20 rounded-lg p-3' },
+              React.createElement('div', { className: 'font-semibold' }, 'נייד'),
+              React.createElement('div', { className: 'opacity-75' }, 'אופטימיזציה מלאה')
+            ),
+            React.createElement('div', { className: 'bg-white bg-opacity-20 rounded-lg p-3' },
+              React.createElement('div', { className: 'font-semibold' }, 'עברית'),
+              React.createElement('div', { className: 'opacity-75' }, 'תמיכה מלאה')
+            )
+          )
+        )
       ),
       
-      // Form
-      React.createElement('form', { onSubmit: handleSubmit },
-        // Username
-        React.createElement('div', { className: 'mb-4' },
-          React.createElement('input', {
-            type: 'text',
-            placeholder: t('auth.username'),
-            value: formData.username,
-            onChange: (e) => setFormData(prev => ({ ...prev, username: e.target.value })),
-            className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400',
-            required: true
-          })
+      // Right side - Form (full width on mobile)
+      React.createElement('div', {
+        className: 'flex-1 flex flex-col justify-center p-4 sm:p-6 lg:p-8'
+      },
+        // Mobile header (visible only on small screens)
+        React.createElement('div', { className: 'sm:hidden text-center mb-4' },
+          React.createElement('h1', {
+            className: 'text-2xl font-bold text-white mb-1'
+          }, t('app.title')),
+          React.createElement('p', {
+            className: 'text-blue-200 text-sm'
+          }, isLogin ? t('auth.login') : t('auth.register'))
         ),
         
-        // Phone (registration only)
-        !isLogin && React.createElement('div', { className: 'mb-4' },
-          React.createElement('input', {
-            type: 'tel',
-            placeholder: t('auth.phone'),
-            value: formData.phone,
-            onChange: (e) => setFormData(prev => ({ ...prev, phone: e.target.value })),
-            className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400',
-            required: true
-          })
+        // Desktop header
+        React.createElement('div', { className: 'hidden sm:block text-center mb-6' },
+          React.createElement('h2', {
+            className: 'text-2xl md:text-3xl font-bold text-white mb-2'
+          }, isLogin ? t('auth.login') : t('auth.register')),
+          React.createElement('p', {
+            className: 'text-blue-200'
+          }, isLogin ? 'ברוכים השבים!' : 'הצטרפו למשחק')
         ),
         
-        // Password
-        React.createElement('div', { className: 'mb-4' },
-          React.createElement('input', {
-            type: 'password',
-            placeholder: t('auth.password'),
-            value: formData.password,
-            onChange: (e) => setFormData(prev => ({ ...prev, password: e.target.value })),
-            className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400',
-            required: true,
-            minLength: 4
-          })
-        ),
-        
-        // Points (registration only)
-        !isLogin && React.createElement('div', { className: 'mb-4' },
-          React.createElement('input', {
-            type: 'number',
-            placeholder: t('auth.points'),
-            value: formData.points,
-            onChange: (e) => setFormData(prev => ({ ...prev, points: parseInt(e.target.value) })),
-            className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400',
-            min: 100,
-            max: 1000,
-            required: true
-          })
-        ),
-        
-        // Error message
-        error && React.createElement('div', {
-          className: 'mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-200 text-sm'
-        }, error),
-        
-        // Submit button
-        React.createElement('button', {
-          type: 'submit',
-          disabled: loading,
-          className: 'w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all'
-        }, loading ? 'מעבד...' : (isLogin ? t('auth.login') : t('auth.register'))),
-        
-        // Toggle form type
-        React.createElement('div', { className: 'mt-6 text-center' },
-          React.createElement('button', {
-            type: 'button',
-            onClick: () => {
-              setIsLogin(!isLogin);
-              setError('');
-            },
-            className: 'text-blue-200 hover:text-white transition-colors'
-          }, isLogin ? 'עדיין לא רשום? הירשם כאן' : 'כבר רשום? התחבר כאן')
+        // Form
+        React.createElement('form', { 
+          onSubmit: handleSubmit,
+          className: 'space-y-3 sm:space-y-4 flex-1 flex flex-col justify-center'
+        },
+          // Input fields container
+          React.createElement('div', { 
+            className: isLogin ? 'space-y-3 sm:space-y-4' : 'grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4'
+          },
+            // Username
+            React.createElement('div', null,
+              React.createElement('input', {
+                type: 'text',
+                placeholder: t('auth.username'),
+                value: formData.username,
+                onChange: (e) => setFormData(prev => ({ ...prev, username: e.target.value })),
+                className: 'w-full px-3 py-2 sm:px-4 sm:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base',
+                required: true
+              })
+            ),
+            
+            // Password
+            React.createElement('div', null,
+              React.createElement('input', {
+                type: 'password',
+                placeholder: t('auth.password'),
+                value: formData.password,
+                onChange: (e) => setFormData(prev => ({ ...prev, password: e.target.value })),
+                className: 'w-full px-3 py-2 sm:px-4 sm:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base',
+                required: true,
+                minLength: 4
+              })
+            ),
+            
+            // Phone (registration only)
+            !isLogin && React.createElement('div', null,
+              React.createElement('input', {
+                type: 'tel',
+                placeholder: t('auth.phone'),
+                value: formData.phone,
+                onChange: (e) => setFormData(prev => ({ ...prev, phone: e.target.value })),
+                className: 'w-full px-3 py-2 sm:px-4 sm:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base',
+                required: true
+              })
+            ),
+            
+            // Points (registration only)
+            !isLogin && React.createElement('div', null,
+              React.createElement('input', {
+                type: 'number',
+                placeholder: t('auth.points'),
+                value: formData.points,
+                onChange: (e) => setFormData(prev => ({ ...prev, points: parseInt(e.target.value) })),
+                className: 'w-full px-3 py-2 sm:px-4 sm:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base',
+                min: 100,
+                max: 1000,
+                required: true
+              })
+            )
+          ),
+          
+          // Error message
+          error && React.createElement('div', {
+            className: 'p-2 sm:p-3 bg-red-500 bg-opacity-20 border border-red-400 rounded-lg text-red-200 text-xs sm:text-sm'
+          }, error),
+          
+          // Action buttons
+          React.createElement('div', { className: 'flex flex-col sm:flex-row gap-2 sm:gap-4' },
+            // Submit button
+            React.createElement('button', {
+              type: 'submit',
+              disabled: loading,
+              className: 'flex-1 py-2 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm sm:text-base'
+            }, loading ? 'מעבד...' : (isLogin ? t('auth.login') : t('auth.register'))),
+            
+            // Toggle button
+            React.createElement('button', {
+              type: 'button',
+              onClick: () => {
+                setIsLogin(!isLogin);
+                setError('');
+              },
+              className: 'py-2 sm:py-3 px-4 bg-white bg-opacity-10 text-blue-200 hover:text-white hover:bg-opacity-20 rounded-lg transition-all text-sm sm:text-base'
+            }, isLogin ? 'הרשמה' : 'התחברות')
+          )
         )
       )
     )

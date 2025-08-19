@@ -1,6 +1,19 @@
 /* Custom styles for Rummikub game */
 
-/* Mobile-first responsive design */
+/* No-scroll mobile-first design */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Mobile landscape optimizations */
 @media (orientation: landscape) and (max-height: 640px) {
   .game-container {
     height: 100vh;
@@ -8,11 +21,33 @@
   }
   
   .game-header {
-    height: 60px;
+    height: 50px;
   }
   
   .player-hand {
-    max-height: 120px;
+    max-height: 100px;
+  }
+  
+  /* Compact form spacing */
+  .auth-form {
+    gap: 8px;
+  }
+  
+  .auth-input {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Portrait mode adjustments */
+@media (orientation: portrait) {
+  html, body {
+    overflow-y: auto;
+    position: static;
+  }
+  
+  #root {
+    overflow-y: auto;
   }
 }
 
