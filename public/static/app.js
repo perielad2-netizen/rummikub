@@ -383,7 +383,8 @@ function App() {
     if (!user) {
       return React.createElement(AuthScreen, {
         onLogin: () => setCurrentScreen('gameSelection'),
-        onRegister: () => setCurrentScreen('gameSelection')
+        onRegister: () => setCurrentScreen('gameSelection'),
+        toggleLanguage: toggleLanguage
       });
     }
     
@@ -439,19 +440,13 @@ function App() {
   return React.createElement('div', {
     className: 'min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900'
   },
-    // Language toggle button
-    React.createElement('button', {
-      onClick: toggleLanguage,
-      className: 'fixed top-4 left-4 z-50 bg-white bg-opacity-20 backdrop-blur-sm text-white px-3 py-2 rounded-lg hover:bg-opacity-30 transition-all'
-    }, language === 'he' ? 'English' : 'עברית'),
-    
     // Main content
     renderScreen()
   );
 }
 
 // Authentication Screen Component
-function AuthScreen({ onLogin, onRegister }) {
+function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -615,19 +610,20 @@ function AuthScreen({ onLogin, onRegister }) {
       )
     ),
 
-    // English and Fullscreen toggles (bottom-left of SCREEN, not form)
-    React.createElement('div', { className: 'fixed bottom-4 left-4 flex flex-col gap-2 z-40' },
-      // English toggle
+    // English and Fullscreen toggles (bottom-left of SCREEN, side-by-side, smaller)
+    React.createElement('div', { className: 'fixed bottom-4 left-4 flex flex-row gap-1 z-40' },
+      // English toggle with language functionality
       React.createElement('button', {
-        className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
-      }, 'English'),
+        onClick: toggleLanguage,
+        className: 'bg-white bg-opacity-20 text-white text-xs px-1 py-0.5 rounded-sm transition-all hover:bg-opacity-30'
+      }, 'EN'),
       
       // Fullscreen toggle
       React.createElement('button', {
         onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
-        className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
+        className: 'bg-white bg-opacity-20 text-white text-xs px-1 py-0.5 rounded-sm transition-all hover:bg-opacity-30'
       },
-        React.createElement('i', { className: 'fas fa-expand' })
+        React.createElement('i', { className: 'fas fa-expand text-xs' })
       )
     ),
 
