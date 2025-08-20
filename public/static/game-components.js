@@ -555,15 +555,9 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
           if (response.data.room.owner_id === user.id) {
             startGame();
           }
-        } else if (response.data.room.owner_id === user.id && response.data.players.length === 1) {
-          // Start bot auto-join timer for room owner if only 1 player (owner) in room
-          if (botTimeout) {
-            clearTimeout(botTimeout);
-          }
-          const timeout = setTimeout(() => {
-            addBot();
-          }, 10000); // Add bot after 10 seconds of waiting
-          setBotTimeout(timeout);
+        } else if (response.data.room.owner_id === user.id) {
+          // Handle bot auto-join for room owner based on room size and current players
+          scheduleNextBot(response.data.room, response.data.players);
         }
       }
     } catch (error) {
@@ -582,6 +576,54 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
       }
     } catch (error) {
       console.error('Failed to add bot:', error);
+    }
+  };
+  
+  const scheduleNextBot = (room, currentPlayers) => {
+    const playerCount = currentPlayers.length;
+    const maxPlayers = room.max_players;
+    
+    // Clear existing timeout
+    if (botTimeout) {
+      clearTimeout(botTimeout);
+    }
+    
+    // Don't schedule bots if room is full or if there are already non-owner players
+    if (playerCount >= maxPlayers) {
+      return;
+    }
+    
+    // Check if we have real players (not just owner)
+    const realPlayers = currentPlayers.filter(p => !p.is_bot);
+    if (realPlayers.length > 1) {
+      return; // Real players joined, stop bot scheduling
+    }
+    
+    let delay;
+    
+    if (maxPlayers === 2) {
+      // 2-player room: Random 20-35 seconds for first (and only) bot
+      if (playerCount === 1) {
+        delay = Math.floor(Math.random() * (35000 - 20000 + 1)) + 20000; // 20-35 seconds
+      }
+    } else {
+      // 3-4 player rooms: 10-20 seconds intervals for additional bots
+      if (playerCount === 1) {
+        // First bot: Random 20-35 seconds (same as 2-player)
+        delay = Math.floor(Math.random() * (35000 - 20000 + 1)) + 20000; // 20-35 seconds
+      } else if (playerCount < maxPlayers) {
+        // Subsequent bots: Random 10-20 seconds
+        delay = Math.floor(Math.random() * (20000 - 10000 + 1)) + 10000; // 10-20 seconds
+      }
+    }
+    
+    if (delay) {
+      const timeout = setTimeout(() => {
+        addBot();
+      }, delay);
+      setBotTimeout(timeout);
+      
+      console.log(`Next bot scheduled in ${Math.round(delay/1000)} seconds for ${maxPlayers}-player room (current: ${playerCount})`);
     }
   };
   
@@ -664,7 +706,6 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
             },
               player ? 
                 React.createElement('div', { className: 'flex items-center justify-center' },
-                  player.is_bot && React.createElement('i', { className: 'fas fa-robot ml-2 text-blue-300' }),
                   React.createElement('span', { className: 'text-white font-medium text-sm landscape:text-base' }, player.username),
                   player.user_id === user.id && React.createElement('span', { className: 'text-green-300 mr-2 text-xs landscape:text-sm' }, '(אתה)')
                 ) :
