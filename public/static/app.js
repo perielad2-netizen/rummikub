@@ -498,7 +498,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
     className: 'min-h-screen flex items-center justify-center p-4 landscape:p-2'
   },
     React.createElement('div', {
-      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full h-full max-w-none max-h-none landscape:max-w-5xl landscape:max-h-80 landscape:w-auto landscape:h-auto p-8 landscape:p-6 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-8'
+      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full h-full max-w-none max-h-none landscape:max-w-6xl landscape:max-h-96 landscape:w-auto landscape:h-auto p-8 landscape:p-8 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-10'
     },
       // PWA Install Button (positioned at top-right, smaller)
       React.createElement('div', { className: 'absolute top-4 right-4' },
@@ -512,10 +512,10 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
       
       // Right side - Header (RTL layout) - REMOVED TITLE
       React.createElement('div', { 
-        className: 'text-center landscape:text-right landscape:flex-shrink-0 landscape:w-60 landscape:flex landscape:flex-col landscape:justify-center mb-6 landscape:mb-0' 
+        className: 'text-center landscape:text-right landscape:flex-shrink-0 landscape:w-80 landscape:flex landscape:flex-col landscape:justify-center mb-6 landscape:mb-0' 
       },
         React.createElement('p', {
-          className: 'text-blue-200 text-lg landscape:text-xl font-medium'
+          className: 'text-blue-200 text-xl landscape:text-2xl font-medium'
         }, isLogin ? t('auth.login') : t('auth.register'))
       ),
       
@@ -537,7 +537,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
               placeholder: t('auth.username'),
               value: formData.username,
               onChange: (e) => setFormData(prev => ({ ...prev, username: e.target.value })),
-              className: 'w-full px-4 py-3 landscape:px-5 landscape:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-base landscape:text-lg',
+              className: 'w-full px-5 py-4 landscape:px-6 landscape:py-4 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg landscape:text-xl',
               required: true
             }),
             
@@ -547,7 +547,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
               placeholder: t('auth.password'),
               value: formData.password,
               onChange: (e) => setFormData(prev => ({ ...prev, password: e.target.value })),
-              className: 'w-full px-4 py-3 landscape:px-5 landscape:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-base landscape:text-lg',
+              className: 'w-full px-5 py-4 landscape:px-6 landscape:py-4 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg landscape:text-xl',
               required: true,
               minLength: 4
             })
@@ -563,7 +563,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
               placeholder: t('auth.phone'),
               value: formData.phone,
               onChange: (e) => setFormData(prev => ({ ...prev, phone: e.target.value })),
-              className: 'w-full px-4 py-3 landscape:px-5 landscape:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-base landscape:text-lg',
+              className: 'w-full px-5 py-4 landscape:px-6 landscape:py-4 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg landscape:text-xl',
               required: true
             }),
             
@@ -573,7 +573,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
               placeholder: t('auth.points'),
               value: formData.points,
               onChange: (e) => setFormData(prev => ({ ...prev, points: parseInt(e.target.value) })),
-              className: 'w-full px-4 py-3 landscape:px-5 landscape:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-base landscape:text-lg',
+              className: 'w-full px-5 py-4 landscape:px-6 landscape:py-4 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg landscape:text-xl',
               min: 100,
               max: 1000,
               required: true
@@ -593,7 +593,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
             React.createElement('button', {
               type: 'submit',
               disabled: loading,
-              className: 'flex-1 py-3 landscape:py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-base landscape:text-lg'
+              className: 'flex-1 py-4 landscape:py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg landscape:text-xl'
             }, loading ? 'מעבד...' : (isLogin ? t('auth.login') : t('auth.register'))),
             
             // Toggle form type button
@@ -603,25 +603,25 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
                 setIsLogin(!isLogin);
                 setError('');
               },
-              className: 'flex-1 py-3 landscape:py-3 bg-white bg-opacity-20 text-blue-200 rounded-lg hover:bg-opacity-30 hover:text-white transition-all text-base landscape:text-lg'
+              className: 'flex-1 py-4 landscape:py-4 bg-white bg-opacity-20 text-blue-200 rounded-lg hover:bg-opacity-30 hover:text-white transition-all text-lg landscape:text-xl'
             }, isLogin ? 'הירשם' : 'התחבר')
           )
         )
       )
     ),
 
-    // English and Fullscreen toggles (bottom-left of SCREEN, side-by-side, smaller)
-    React.createElement('div', { className: 'fixed bottom-4 left-4 flex flex-row gap-1 z-40' },
+    // English and Fullscreen toggles (bottom-left of SCREEN, side-by-side, very small)
+    React.createElement('div', { className: 'fixed bottom-2 left-2 flex flex-row gap-0.5 z-40' },
       // English toggle with language functionality
       React.createElement('button', {
         onClick: toggleLanguage,
-        className: 'bg-white bg-opacity-20 text-white text-xs px-1 py-0.5 rounded-sm transition-all hover:bg-opacity-30'
+        className: 'bg-white bg-opacity-15 text-white text-xs px-1 py-0.5 rounded text-xs leading-none transition-all hover:bg-opacity-25'
       }, 'EN'),
       
       // Fullscreen toggle
       React.createElement('button', {
         onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
-        className: 'bg-white bg-opacity-20 text-white text-xs px-1 py-0.5 rounded-sm transition-all hover:bg-opacity-30'
+        className: 'bg-white bg-opacity-15 text-white text-xs px-1 py-0.5 rounded text-xs leading-none transition-all hover:bg-opacity-25'
       },
         React.createElement('i', { className: 'fas fa-expand text-xs' })
       )
