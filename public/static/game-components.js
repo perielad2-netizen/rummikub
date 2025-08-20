@@ -150,9 +150,10 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
 // Create Room Modal Component
 function CreateRoomModal({ gameType, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
+    roomName: '',
     entryPoints: 100,
     maxPlayers: 2,
-    isPrivate: true
+    isPrivate: false
   });
   const [loading, setLoading] = useState(false);
   
@@ -190,6 +191,21 @@ function CreateRoomModal({ gameType, onClose, onSuccess }) {
       }, t('room.create_private')),
       
       React.createElement('form', { onSubmit: handleSubmit },
+        // Room Name
+        React.createElement('div', { className: 'mb-4' },
+          React.createElement('label', {
+            className: 'block text-white mb-2'
+          }, 'שם החדר'),
+          React.createElement('input', {
+            type: 'text',
+            value: formData.roomName,
+            onChange: (e) => setFormData(prev => ({ ...prev, roomName: e.target.value })),
+            placeholder: 'הכנס שם לחדר (אופציונלי)',
+            className: 'w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400',
+            maxLength: 30
+          })
+        ),
+        
         // Entry Points
         React.createElement('div', { className: 'mb-4' },
           React.createElement('label', {
@@ -211,13 +227,13 @@ function CreateRoomModal({ gameType, onClose, onSuccess }) {
           React.createElement('label', {
             className: 'block text-white mb-2'
           }, 'מספר שחקנים'),
-          React.createElement('div', { className: 'flex space-x-2' },
+          React.createElement('div', { className: 'flex gap-3' },
             [2, 3, 4].map(num =>
               React.createElement('button', {
                 key: num,
                 type: 'button',
                 onClick: () => setFormData(prev => ({ ...prev, maxPlayers: num })),
-                className: `px-4 py-2 rounded-lg border transition-colors ${formData.maxPlayers === num ? 'bg-blue-500 border-blue-400 text-white' : 'bg-white bg-opacity-20 border-white border-opacity-30 text-blue-200'}`
+                className: `flex-1 px-4 py-2 rounded-lg border transition-colors ${formData.maxPlayers === num ? 'bg-blue-500 border-blue-400 text-white' : 'bg-white bg-opacity-20 border-white border-opacity-30 text-blue-200'}`
               }, num)
             )
           )
