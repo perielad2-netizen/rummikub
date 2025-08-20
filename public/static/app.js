@@ -141,6 +141,30 @@ const translations = {
     he: 'אין חדרים ציבוריים זמינים',
     en: 'No public rooms available'
   },
+  'room.room_name': {
+    he: 'שם החדר',
+    en: 'Room Name'
+  },
+  'room.room_name_placeholder': {
+    he: 'הכנס שם לחדר (אופציונלי)',
+    en: 'Enter room name (optional)'
+  },
+  'room.entry_points': {
+    he: 'נקודות כניסה',
+    en: 'Entry Points'
+  },
+  'room.max_players': {
+    he: 'מספר שחקנים',
+    en: 'Max Players'
+  },
+  'room.private_room': {
+    he: 'חדר פרטי',
+    en: 'Private Room'
+  },
+  'room.creating': {
+    he: 'יוצר...',
+    en: 'Creating...'
+  },
   
   // Game UI
   'game.your_turn': {
@@ -168,6 +192,10 @@ const translations = {
   'btn.cancel': {
     he: 'ביטול',
     en: 'Cancel'
+  },
+  'btn.create': {
+    he: 'צור',
+    en: 'Create'
   },
   'btn.close': {
     he: 'סגור',

@@ -301,33 +301,36 @@ function CreateRoomModal({ gameType, onClose, onSuccess }) {
     className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'
   },
     React.createElement('div', {
-      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 w-full max-w-md'
+      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 w-full max-w-2xl landscape:max-w-4xl'
     },
       React.createElement('h3', {
-        className: 'text-xl font-bold text-white mb-4'
+        className: 'text-lg landscape:text-xl font-bold text-white mb-3 landscape:mb-4 text-center'
       }, t('room.create_private')),
       
-      React.createElement('form', { onSubmit: handleSubmit },
+      React.createElement('form', { 
+        onSubmit: handleSubmit,
+        className: 'landscape:grid landscape:grid-cols-2 landscape:gap-4 space-y-3 landscape:space-y-0'
+      },
         // Room Name
-        React.createElement('div', { className: 'mb-4' },
+        React.createElement('div', { className: 'mb-3' },
           React.createElement('label', {
-            className: 'block text-white mb-2'
-          }, 'שם החדר'),
+            className: 'block text-white mb-1 text-sm landscape:text-base'
+          }, t('room.room_name')),
           React.createElement('input', {
             type: 'text',
             value: formData.roomName,
             onChange: (e) => setFormData(prev => ({ ...prev, roomName: e.target.value })),
-            placeholder: 'הכנס שם לחדר (אופציונלי)',
-            className: 'w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400',
+            placeholder: t('room.room_name_placeholder'),
+            className: 'w-full px-3 py-2 landscape:px-4 landscape:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm landscape:text-base',
             maxLength: 30
           })
         ),
         
         // Entry Points
-        React.createElement('div', { className: 'mb-4' },
+        React.createElement('div', { className: 'mb-3' },
           React.createElement('label', {
-            className: 'block text-white mb-2'
-          }, 'נקודות כניסה'),
+            className: 'block text-white mb-1 text-sm landscape:text-base'
+          }, t('room.entry_points')),
           React.createElement('input', {
             type: 'number',
             min: 50,
@@ -335,53 +338,53 @@ function CreateRoomModal({ gameType, onClose, onSuccess }) {
             step: 50,
             value: formData.entryPoints,
             onChange: (e) => setFormData(prev => ({ ...prev, entryPoints: parseInt(e.target.value) })),
-            className: 'w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400'
+            className: 'w-full px-3 py-2 landscape:px-4 landscape:py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm landscape:text-base'
           })
         ),
         
         // Max Players
-        React.createElement('div', { className: 'mb-4' },
+        React.createElement('div', { className: 'mb-3 landscape:col-span-2' },
           React.createElement('label', {
-            className: 'block text-white mb-2'
-          }, 'מספר שחקנים'),
-          React.createElement('div', { className: 'flex gap-3' },
+            className: 'block text-white mb-1 text-sm landscape:text-base'
+          }, t('room.max_players')),
+          React.createElement('div', { className: 'flex gap-2 landscape:gap-3' },
             [2, 3, 4].map(num =>
               React.createElement('button', {
                 key: num,
                 type: 'button',
                 onClick: () => setFormData(prev => ({ ...prev, maxPlayers: num })),
-                className: `flex-1 px-4 py-2 rounded-lg border transition-colors ${formData.maxPlayers === num ? 'bg-blue-500 border-blue-400 text-white' : 'bg-white bg-opacity-20 border-white border-opacity-30 text-blue-200'}`
+                className: `flex-1 px-3 py-2 landscape:px-4 landscape:py-3 rounded-lg border transition-colors text-sm landscape:text-base ${formData.maxPlayers === num ? 'bg-blue-500 border-blue-400 text-white' : 'bg-white bg-opacity-20 border-white border-opacity-30 text-blue-200'}`
               }, num)
             )
           )
         ),
         
         // Private/Public toggle
-        React.createElement('div', { className: 'mb-6' },
-          React.createElement('label', { className: 'flex items-center text-white' },
+        React.createElement('div', { className: 'mb-4 landscape:col-span-2' },
+          React.createElement('label', { className: 'flex items-center text-white text-sm landscape:text-base' },
             React.createElement('input', {
               type: 'checkbox',
               checked: formData.isPrivate,
               onChange: (e) => setFormData(prev => ({ ...prev, isPrivate: e.target.checked })),
               className: 'ml-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
             }),
-            'חדר פרטי'
+            t('room.private_room')
           )
         ),
         
         // Buttons
-        React.createElement('div', { className: 'flex space-x-3' },
+        React.createElement('div', { className: 'flex gap-2 landscape:gap-3 landscape:col-span-2' },
           React.createElement('button', {
             type: 'button',
             onClick: onClose,
-            className: 'flex-1 py-2 px-4 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors'
+            className: 'flex-1 py-2 px-3 landscape:py-3 landscape:px-4 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm landscape:text-base'
           }, t('btn.cancel')),
           
           React.createElement('button', {
             type: 'submit',
             disabled: loading,
-            className: 'flex-1 py-2 px-4 bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg transition-colors'
-          }, loading ? 'יוצר...' : t('btn.create'))
+            className: 'flex-1 py-2 px-3 landscape:py-3 landscape:px-4 bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg transition-colors text-sm landscape:text-base'
+          }, loading ? t('room.creating') : t('btn.create'))
         )
       )
     )
