@@ -254,11 +254,11 @@ app.get('/', (c) => {
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         
         <!-- Game components -->
-        <script type="text/babel" src="/static/game-components.js"></script>
-        <script type="text/babel" src="/static/game-board.js"></script>
+        <script type="text/babel" src="/static/game-components.js?v=${Date.now()}"></script>
+        <script type="text/babel" src="/static/game-board.js?v=${Date.now()}"></script>
         
         <!-- Main application -->
-        <script type="text/babel" src="/static/app.js"></script>
+        <script type="text/babel" src="/static/app.js?v=${Date.now()}"></script>
         
         <!-- Service Worker Registration & PWA -->
         <script>

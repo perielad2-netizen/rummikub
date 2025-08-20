@@ -29,6 +29,10 @@ const translations = {
     he: 'התנתקות',
     en: 'Logout'
   },
+  'nav.hello': {
+    he: 'שלום',
+    en: 'Hello'
+  },
   
   // Authentication
   'auth.login': {
@@ -58,6 +62,18 @@ const translations = {
   'auth.play_game': {
     he: 'שחק עכשיו',
     en: 'Play Game'
+  },
+  'auth.install_app': {
+    he: 'התקן אפליקציה',
+    en: 'Install App'
+  },
+  'auth.error_login': {
+    he: 'שם משתמש או סיסמה לא נכונים',
+    en: 'Username or password incorrect'
+  },
+  'auth.success_register': {
+    he: 'ההרשמה בוצעה בהצלחה! ממתין לאישור מנהל',
+    en: 'Registration successful! Waiting for admin approval'
   },
   
   // Game types
@@ -146,9 +162,13 @@ function LanguageProvider({ children }) {
   };
   
   const toggleLanguage = () => {
-    setLanguage(prev => prev === 'he' ? 'en' : 'he');
-    document.documentElement.lang = language === 'he' ? 'en' : 'he';
-    document.documentElement.dir = language === 'he' ? 'ltr' : 'rtl';
+    setLanguage(prev => {
+      const newLang = prev === 'he' ? 'en' : 'he';
+      // Update DOM with the new language immediately
+      document.documentElement.lang = newLang;
+      document.documentElement.dir = newLang === 'he' ? 'rtl' : 'ltr';
+      return newLang;
+    });
   };
   
   useEffect(() => {
@@ -159,6 +179,53 @@ function LanguageProvider({ children }) {
   return React.createElement(LanguageContext.Provider, {
     value: { language, setLanguage, t, toggleLanguage }
   }, children);
+}
+
+// Universal Controls Component - Language and Fullscreen toggles for all screens
+function UniversalControls({ className = '' }) {
+  const { language, toggleLanguage, t } = useContext(LanguageContext);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+        setIsFullscreen(true);
+      } else {
+        await document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    } catch (error) {
+      console.log('Fullscreen not supported or failed:', error);
+    }
+  };
+  
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+  
+  return React.createElement('div', {
+    className: `flex items-center gap-2 ${className}`
+  },
+    // Language Toggle
+    React.createElement('button', {
+      onClick: toggleLanguage,
+      className: 'px-2 py-1 bg-white bg-opacity-20 backdrop-blur-sm rounded-md border border-white border-opacity-30 text-white text-xs font-medium hover:bg-opacity-30 transition-all',
+      title: language === 'he' ? 'Switch to English' : 'עבור לעברית'
+    }, language === 'he' ? 'EN' : 'עב'),
+    
+    // Fullscreen Toggle
+    React.createElement('button', {
+      onClick: toggleFullscreen,
+      className: 'px-2 py-1 bg-white bg-opacity-20 backdrop-blur-sm rounded-md border border-white border-opacity-30 text-white text-xs hover:bg-opacity-30 transition-all',
+      title: isFullscreen ? (language === 'he' ? 'צא ממסך מלא' : 'Exit Fullscreen') : (language === 'he' ? 'מסך מלא' : 'Fullscreen')
+    }, isFullscreen ? '🗗' : '🗖')
+  );
 }
 
 // API utilities
@@ -357,7 +424,7 @@ function App() {
   const wsManager = useRef(new WSManager());
   
   const { user, loading } = useContext(AuthContext);
-  const { language, toggleLanguage } = useContext(LanguageContext);
+  const { language } = useContext(LanguageContext);
   
   useEffect(() => {
     if (user) {
@@ -383,8 +450,7 @@ function App() {
     if (!user) {
       return React.createElement(AuthScreen, {
         onLogin: () => setCurrentScreen('gameSelection'),
-        onRegister: () => setCurrentScreen('gameSelection'),
-        toggleLanguage: toggleLanguage
+        onRegister: () => setCurrentScreen('gameSelection')
       });
     }
     
@@ -446,7 +512,7 @@ function App() {
 }
 
 // Authentication Screen Component
-function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
+function AuthScreen({ onLogin, onRegister }) {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -459,7 +525,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
   const [showInstallModal, setShowInstallModal] = useState(false);
   
   const { login, register } = useContext(AuthContext);
-  const { t } = useContext(LanguageContext);
+  const { t, language } = useContext(LanguageContext);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -472,7 +538,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
         if (success) {
           onLogin();
         } else {
-          setError('שם משתמש או סיסמה לא נכונים');
+          setError(t('auth.error_login'));
         }
       } else {
         const success = await register(
@@ -483,7 +549,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
         );
         if (success) {
           setError('');
-          alert('ההרשמה בוצעה בהצלחה! ממתין לאישור מנהל');
+          alert(t('auth.success_register'));
           setIsLogin(true);
         }
       }
@@ -495,18 +561,25 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen flex items-center justify-center p-4 landscape:p-6'
+    className: 'min-h-screen flex items-center justify-center p-4 landscape:p-6 relative'
   },
+    // Universal Controls at bottom-left - consistent position
+    React.createElement(UniversalControls, {
+      className: 'fixed bottom-2 left-2 z-50'
+    }),
+    
     React.createElement('div', {
       className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full max-w-md landscape:max-w-4xl landscape:h-3/5 p-6 landscape:p-8 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-8'
     },
-      // PWA Install Button (positioned at top-right, smaller)
-      React.createElement('div', { className: 'absolute top-4 right-4' },
+      // PWA Install Button (positioned based on language direction)
+      React.createElement('div', { 
+        className: `absolute top-4 ${language === 'he' ? 'right-4' : 'left-4'}` 
+      },
         React.createElement('button', {
           onClick: () => setShowInstallModal(true),
           className: 'bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg shadow-md transition-all text-sm'
         },
-          'התקן אפליקציה'
+          t('auth.install_app')
         )
       ),
       
@@ -590,7 +663,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
               type: 'submit',
               disabled: loading,
               className: 'flex-1 py-4 landscape:py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg landscape:text-xl'
-            }, loading ? 'מעבד...' : (isLogin ? t('auth.login') : t('auth.register'))),
+            }, loading ? (language === 'he' ? 'מעבד...' : 'Processing...') : (isLogin ? t('auth.login') : t('auth.register'))),
             
             // Toggle form type button
             React.createElement('button', {
@@ -600,28 +673,13 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
                 setError('');
               },
               className: 'flex-1 py-4 landscape:py-4 bg-white bg-opacity-20 text-blue-200 rounded-lg hover:bg-opacity-30 hover:text-white transition-all text-lg landscape:text-xl'
-            }, isLogin ? 'הירשם' : 'התחבר')
+            }, isLogin ? t('auth.register') : t('auth.login'))
           )
         )
       )
     ),
 
-    // English and Fullscreen toggles (bottom-left of SCREEN, side-by-side, very small)
-    React.createElement('div', { className: 'fixed bottom-2 left-2 flex flex-row gap-0.5 z-40' },
-      // English toggle with language functionality
-      React.createElement('button', {
-        onClick: toggleLanguage,
-        className: 'bg-white bg-opacity-15 text-white text-xs px-1 py-0.5 rounded text-xs leading-none transition-all hover:bg-opacity-25'
-      }, 'EN'),
-      
-      // Fullscreen toggle
-      React.createElement('button', {
-        onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
-        className: 'bg-white bg-opacity-15 text-white text-xs px-1 py-0.5 rounded text-xs leading-none transition-all hover:bg-opacity-25'
-      },
-        React.createElement('i', { className: 'fas fa-expand text-xs' })
-      )
-    ),
+
 
     // Install Modal
     showInstallModal && React.createElement('div', {
@@ -723,39 +781,64 @@ function GameSelectionScreen({ onSelectGame }) {
   ];
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'h-screen flex flex-col overflow-hidden relative'
   },
-    // Header
+    // Universal Controls at bottom-left - consistent position
+    React.createElement(UniversalControls, {
+      className: 'fixed bottom-2 left-2 z-50'
+    }),
+    // Compact header optimized for landscape
     React.createElement('div', {
-      className: 'flex justify-between items-center mb-8 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
+      className: 'flex justify-between items-center px-6 py-3 bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20'
     },
-      React.createElement('div', { className: 'text-white' },
-        React.createElement('h2', { className: 'text-xl font-bold' }, `שלום, ${user.username}`),
-        React.createElement('p', { className: 'text-blue-200' }, `נקודות: ${user.points}`)
+      React.createElement('div', { className: 'text-white flex items-center gap-4' },
+        React.createElement('span', { className: 'text-lg font-bold' }, `${t('nav.hello', user.username) || 'שלום'}, ${user.username}`),
+        React.createElement('span', { className: 'text-blue-200 text-sm' }, `${t('game.points') || 'נקודות'}: ${user.points}`)
       ),
       React.createElement('button', {
         onClick: logout,
-        className: 'px-4 py-2 bg-red-500 bg-opacity-20 border border-red-400 text-red-200 rounded-lg hover:bg-opacity-30 transition-all'
+        className: 'px-3 py-1.5 bg-red-500 bg-opacity-20 border border-red-400 text-red-200 rounded-lg hover:bg-opacity-30 transition-all text-sm'
       }, t('nav.logout'))
     ),
     
-    // Game selection - Mobile-first landscape layout
-    React.createElement('div', { className: 'flex-1 flex flex-col items-center justify-center' },
+    // Main content area - optimized for landscape
+    React.createElement('div', { className: 'flex-1 flex flex-col justify-center items-center px-6 py-4' },
       React.createElement('h1', {
-        className: 'text-3xl font-bold text-white text-center mb-6'
+        className: 'text-2xl landscape:text-xl font-bold text-white text-center mb-6 landscape:mb-4'
       }, 'בחר סוג משחק'),
       
-      React.createElement('div', { className: 'grid grid-cols-2 gap-6 w-full max-w-4xl px-4' },
+      // Horizontal layout for landscape - native app feel with smaller cards
+      React.createElement('div', { 
+        className: 'w-full max-w-3xl landscape:flex landscape:gap-6 landscape:justify-center portrait:grid portrait:grid-cols-1 portrait:gap-4'
+      },
         gameTypes.map(game => 
           React.createElement('button', {
             key: game.id,
             onClick: () => game.enabled && onSelectGame(game.id),
             disabled: !game.enabled,
-            className: `aspect-square p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl border border-white border-opacity-20 hover:bg-opacity-20 transition-all duration-300 transform hover:scale-105 flex flex-col items-center justify-center text-center`
+            className: `
+              landscape:flex-1 landscape:max-w-xs landscape:h-24
+              portrait:aspect-[3/2] portrait:h-32
+              p-4 bg-white bg-opacity-15 backdrop-blur-lg rounded-xl 
+              border border-white border-opacity-30 
+              hover:bg-opacity-25 active:bg-opacity-30
+              transition-all duration-200 transform active:scale-95
+              flex landscape:flex-row portrait:flex-col items-center justify-center 
+              text-center landscape:text-right gap-3
+              shadow-lg hover:shadow-xl
+            `
           },
-            React.createElement('div', { className: 'text-6xl mb-4' }, game.icon),
-            React.createElement('h3', { className: 'text-xl font-bold text-white mb-2' }, game.name),
-            React.createElement('p', { className: 'text-blue-200 text-sm' }, game.description)
+            React.createElement('div', { 
+              className: 'text-3xl landscape:text-2xl portrait:text-4xl landscape:flex-shrink-0' 
+            }, game.icon),
+            React.createElement('div', { className: 'landscape:text-right portrait:text-center flex-1' },
+              React.createElement('h3', { 
+                className: 'text-lg landscape:text-base font-bold text-white mb-0.5' 
+              }, game.name),
+              React.createElement('p', { 
+                className: 'text-blue-200 text-xs landscape:text-xs leading-tight' 
+              }, game.description)
+            )
           )
         )
       )

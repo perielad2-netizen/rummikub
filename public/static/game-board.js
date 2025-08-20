@@ -289,8 +289,12 @@ function GameBoardScreen({ roomData, gameType, wsManager, onGameEnd }) {
   };
   
   return React.createElement('div', {
-    className: 'game-container h-screen overflow-hidden bg-gradient-to-br from-green-800 via-green-700 to-green-900'
+    className: 'game-container h-screen overflow-hidden bg-gradient-to-br from-green-800 via-green-700 to-green-900 relative'
   },
+    // Universal Controls at bottom-left - consistent position
+    React.createElement(UniversalControls, {
+      className: 'fixed bottom-2 left-2 z-50'
+    }),
     // Game Header (landscape optimized)
     React.createElement('div', {
       className: 'flex items-center justify-between p-2 sm:p-4 bg-black bg-opacity-30 text-white'

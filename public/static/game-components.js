@@ -34,8 +34,12 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'min-h-screen p-4 relative'
   },
+    // Universal Controls at bottom-left - consistent position
+    React.createElement(UniversalControls, {
+      className: 'fixed bottom-2 left-2 z-50'
+    }),
     // Header
     React.createElement('div', {
       className: 'flex items-center justify-between mb-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
@@ -579,8 +583,13 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4'
+    className: 'min-h-screen p-4 relative'
   },
+    // Universal Controls at bottom-left - consistent position
+    React.createElement(UniversalControls, {
+      className: 'fixed bottom-2 left-2 z-50'
+    }),
+    
     // Header
     React.createElement('div', {
       className: 'flex items-center justify-between mb-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
