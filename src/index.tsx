@@ -72,7 +72,7 @@ app.get('/manifest.json', (c) => {
 app.get('/sw.js', (c) => {
   return c.text(`
 // Service Worker for רמיקוב PWA
-const CACHE_NAME = 'rummikub-v1';
+const CACHE_NAME = 'rummikub-v2';
 const urlsToCache = [
   '/',
   '/static/app.js',

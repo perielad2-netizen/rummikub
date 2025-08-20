@@ -1,4 +1,4 @@
-// Room Selection Screen Component
+// Room Selection Screen Component - Updated
 function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
@@ -434,12 +434,12 @@ function JoinRoomModal({ onClose, onSuccess }) {
         React.createElement('div', { className: 'mb-6' },
           React.createElement('label', {
             className: 'block text-white mb-2'
-          }, 'מפתח החדר'),
+          }, 'הכנס מפתח חדר'),
           React.createElement('input', {
             type: 'text',
             value: roomKey,
             onChange: (e) => setRoomKey(e.target.value.toUpperCase()),
-            placeholder: 'הכנס מפתח חדר (6 תווים)',
+            placeholder: 'הכנס מפתח חדר',
             maxLength: 6,
             className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center text-2xl font-mono tracking-widest'
           })

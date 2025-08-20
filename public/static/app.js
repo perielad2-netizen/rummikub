@@ -110,12 +110,12 @@ const translations = {
   
   // Room actions
   'room.create_private': {
-    he: 'צור חדר פרטי',
-    en: 'Create Private Room'
+    he: 'צור חדר',
+    en: 'Create Room'
   },
   'room.join_private': {
-    he: 'הכנס מפתח חדר',
-    en: 'Enter Room Key'
+    he: 'הצטרף לחדר פרטי',
+    en: 'Join Private Room'
   },
   'room.join_public': {
     he: 'הצטרף לחדר ציבורי',
