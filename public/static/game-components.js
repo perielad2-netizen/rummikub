@@ -445,7 +445,7 @@ function JoinRoomModal({ onClose, onSuccess }) {
           })
         ),
         
-        React.createElement('div', { className: 'flex space-x-3' },
+        React.createElement('div', { className: 'flex gap-4' },
           React.createElement('button', {
             type: 'button',
             onClick: onClose,

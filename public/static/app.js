@@ -114,8 +114,8 @@ const translations = {
     en: 'Create Private Room'
   },
   'room.join_private': {
-    he: 'הצטרף לחדר פרטי',
-    en: 'Join Private Room'
+    he: 'הכנס מפתח חדר',
+    en: 'Enter Room Key'
   },
   'room.join_public': {
     he: 'הצטרף לחדר ציבורי',
