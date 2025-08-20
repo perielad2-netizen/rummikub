@@ -85,6 +85,20 @@ const translations = {
     he: 'רמי אנט',
     en: 'Rummy Annette'
   },
+  
+  // Game selection screen
+  'game.choose_type': {
+    he: 'בחר סוג משחק',
+    en: 'Choose Game Type'
+  },
+  'game.rummy31_desc': {
+    he: 'המשחק הקלאסי - מטרה של 31 נקודות',
+    en: 'Classic game - Target of 31 points'
+  },
+  'game.rummyannette_desc': {
+    he: 'משחק מהיר - 15 קלפים ורצף אחד',
+    en: 'Fast game - 15 cards and one sequence'
+  },
   'game.rummy51': {
     he: 'רמי 51',
     en: 'Rummy 51'
@@ -110,6 +124,22 @@ const translations = {
   'room.settings': {
     he: 'הגדרות',
     en: 'Settings'
+  },
+  'room.quick_game': {
+    he: 'משחק מהיר',
+    en: 'Quick Game'
+  },
+  'room.public_rooms_list': {
+    he: 'רשימת חדרים ציבוריים',
+    en: 'Public Rooms List'
+  },
+  'room.no_public_rooms': {
+    he: 'אין חדרים ציבוריים זמינים כרגע',
+    en: 'No public rooms available right now'
+  },
+  'room.no_public_rooms_alert': {
+    he: 'אין חדרים ציבוריים זמינים',
+    en: 'No public rooms available'
   },
   
   // Game UI
@@ -766,17 +796,17 @@ function GameSelectionScreen({ onSelectGame }) {
   const gameTypes = [
     {
       id: 'rummy31',
-      name: 'רמי 31',
+      name: t('game.rummy31'),
       icon: '🎯',
       enabled: true,
-      description: 'המשחק הקלאסי - מטרה של 31 נקודות'
+      description: t('game.rummy31_desc')
     },
     {
       id: 'rummyannette',
-      name: 'רמי אנט',
+      name: t('game.rummyannette'),
       icon: '🎲',
       enabled: true,
-      description: 'משחק מהיר - 15 קלפים ורצף אחד'
+      description: t('game.rummyannette_desc')
     }
   ];
   
@@ -792,8 +822,8 @@ function GameSelectionScreen({ onSelectGame }) {
       className: 'flex justify-between items-center px-6 py-3 bg-white bg-opacity-10 backdrop-blur-lg border-b border-white border-opacity-20'
     },
       React.createElement('div', { className: 'text-white flex items-center gap-4' },
-        React.createElement('span', { className: 'text-lg font-bold' }, `${t('nav.hello', user.username) || 'שלום'}, ${user.username}`),
-        React.createElement('span', { className: 'text-blue-200 text-sm' }, `${t('game.points') || 'נקודות'}: ${user.points}`)
+        React.createElement('span', { className: 'text-lg font-bold' }, `${t('nav.hello')}, ${user.username}`),
+        React.createElement('span', { className: 'text-blue-200 text-sm' }, `${t('game.points')}: ${user.points}`)
       ),
       React.createElement('button', {
         onClick: logout,
@@ -805,7 +835,7 @@ function GameSelectionScreen({ onSelectGame }) {
     React.createElement('div', { className: 'flex-1 flex flex-col justify-center items-center px-6 py-4' },
       React.createElement('h1', {
         className: 'text-2xl landscape:text-xl font-bold text-white text-center mb-6 landscape:mb-4'
-      }, 'בחר סוג משחק'),
+      }, t('game.choose_type')),
       
       // Horizontal layout for landscape - native app feel with smaller cards
       React.createElement('div', { 
