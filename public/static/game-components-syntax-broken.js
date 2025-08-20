@@ -152,8 +152,6 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
 
 // Create Room Modal Component
 function CreateRoomModal({ gameType, onClose, onSuccess }) {
-    className: 'min-h-screen flex flex-col'
-  },
     // Header
     React.createElement('div', {
       className: 'flex items-center justify-between p-4 bg-white bg-opacity-10 backdrop-blur-lg'
@@ -436,7 +434,7 @@ function JoinRoomModal({ onClose, onSuccess }) {
         React.createElement('div', { className: 'mb-6' },
           React.createElement('label', {
             className: 'block text-white mb-2'
-          }, 'מפתח החדר'),
+          }, t('room.join_private')),
           React.createElement('input', {
             type: 'text',
             value: roomKey,
@@ -527,6 +525,7 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
   const [players, setPlayers] = useState([]);
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [botTimeout, setBotTimeout] = useState(null);
   
   const { user } = useContext(AuthContext);
   const { t } = useContext(LanguageContext);
@@ -535,7 +534,12 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
     loadRoomData();
     const interval = setInterval(loadRoomData, 2000); // Poll every 2 seconds
     
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (botTimeout) {
+        clearTimeout(botTimeout);
+      }
+    };
   }, [roomData.roomId]);
   
   const loadRoomData = async () => {
@@ -551,12 +555,75 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
           if (response.data.room.owner_id === user.id) {
             startGame();
           }
+        } else if (response.data.room.owner_id === user.id) {
+          // Handle bot auto-join for room owner based on room size and current players
+          scheduleNextBot(response.data.room, response.data.players);
         }
       }
     } catch (error) {
       console.error('Failed to load room data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const addBot = async () => {
+    try {
+      const response = await APIClient.game(`/room/${roomData.roomId}/add-bot`, {}, 'POST');
+      if (response.success) {
+        console.log('Bot added:', response.data.botName);
+        // loadRoomData will be called by the interval and update the UI
+      }
+    } catch (error) {
+      console.error('Failed to add bot:', error);
+    }
+  };
+  
+  const scheduleNextBot = (room, currentPlayers) => {
+    const playerCount = currentPlayers.length;
+    const maxPlayers = room.max_players;
+    
+    // Clear existing timeout
+    if (botTimeout) {
+      clearTimeout(botTimeout);
+    }
+    
+    // Don't schedule bots if room is full or if there are already non-owner players
+    if (playerCount >= maxPlayers) {
+      return;
+    }
+    
+    // Check if we have real players (not just owner)
+    const realPlayers = currentPlayers.filter(p => !p.is_bot);
+    if (realPlayers.length > 1) {
+      return; // Real players joined, stop bot scheduling
+    }
+    
+    let delay;
+    
+    if (maxPlayers === 2) {
+      // 2-player room: Random 20-35 seconds for first (and only) bot
+      if (playerCount === 1) {
+        delay = Math.floor(Math.random() * (35000 - 20000 + 1)) + 20000; // 20-35 seconds
+      }
+    } else {
+      // 3-4 player rooms: 10-20 seconds intervals for additional bots
+      if (playerCount === 1) {
+        // First bot: Random 20-35 seconds (same as 2-player)
+        delay = Math.floor(Math.random() * (35000 - 20000 + 1)) + 20000; // 20-35 seconds
+      } else if (playerCount < maxPlayers) {
+        // Subsequent bots: Random 10-20 seconds
+        delay = Math.floor(Math.random() * (20000 - 10000 + 1)) + 10000; // 10-20 seconds
+      }
+    }
+    
+    if (delay) {
+      const timeout = setTimeout(() => {
+        addBot();
+      }, delay);
+      setBotTimeout(timeout);
+      
+      console.log(`Next bot scheduled in ${Math.round(delay/1000)} seconds for ${maxPlayers}-player room (current: ${playerCount})`);
     }
   };
   
@@ -588,77 +655,77 @@ function WaitingRoomScreen({ roomData, onBack, onGameStart }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen p-4 relative'
+    className: 'min-h-screen p-3 landscape:p-4 relative'
   },
     // Universal Controls at bottom-left - consistent position
     React.createElement(UniversalControls, {
       className: 'fixed bottom-2 left-2 z-50'
     }),
     
-    // Header
+    // Header - more compact
     React.createElement('div', {
-      className: 'flex items-center justify-between mb-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
+      className: 'flex items-center justify-between mb-4 landscape:mb-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-3 landscape:p-4'
     },
       React.createElement('button', {
         onClick: onBack,
-        className: 'flex items-center text-white hover:text-blue-200 transition-colors'
+        className: 'flex items-center text-white hover:text-blue-200 transition-colors text-sm landscape:text-base'
       },
         React.createElement('i', { className: 'fas fa-arrow-right mr-2' }),
         t('game.back')
       ),
       React.createElement('div', { className: 'text-center text-white' },
-        React.createElement('h1', { className: 'text-xl font-bold' }, gameTypeNames[room?.game_type]),
-        room?.is_private && React.createElement('p', { className: 'text-blue-200' }, `מפתח: ${roomData.roomKey}`)
+        React.createElement('h1', { className: 'text-lg landscape:text-xl font-bold' }, gameTypeNames[room?.game_type]),
+        room?.is_private && React.createElement('p', { className: 'text-blue-200 text-xs landscape:text-sm' }, `מפתח: ${roomData.roomKey}`)
       ),
       React.createElement('div', {
-        className: 'text-white text-lg'
+        className: 'text-white text-sm landscape:text-base'
       }, `${room?.entry_points} ${t('game.points')}`)
     ),
     
-    // Waiting area
-    React.createElement('div', { className: 'max-w-2xl mx-auto' },
+    // Waiting area - more compact and nicer design
+    React.createElement('div', { className: 'max-w-lg landscape:max-w-2xl mx-auto' },
       React.createElement('div', {
-        className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 text-center'
+        className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 landscape:p-6 text-center'
       },
         React.createElement('h2', {
-          className: 'text-2xl font-bold text-white mb-6'
+          className: 'text-lg landscape:text-xl font-bold text-white mb-4'
         }, t('game.waiting')),
         
+        // Player count with proper styling - fix black text issue
         React.createElement('div', {
-          className: 'text-4xl mb-6'
+          className: 'text-2xl landscape:text-3xl font-bold text-white mb-4 landscape:mb-6'
         }, `${players.length}/${room?.max_players}`),
         
-        // Players list
-        React.createElement('div', { className: 'space-y-3 mb-8' },
+        // Players list - more compact
+        React.createElement('div', { className: 'space-y-2 landscape:space-y-3 mb-6' },
           Array.from({ length: room?.max_players || 0 }, (_, index) => {
             const player = players[index];
             return React.createElement('div', {
               key: index,
-              className: `p-4 rounded-xl ${player ? 'bg-green-500 bg-opacity-20 border border-green-400' : 'bg-gray-500 bg-opacity-20 border border-gray-400 border-dashed'}`
+              className: `p-3 landscape:p-4 rounded-lg ${player ? 'bg-green-500 bg-opacity-20 border border-green-400' : 'bg-gray-500 bg-opacity-20 border border-gray-400 border-dashed'}`
             },
               player ? 
                 React.createElement('div', { className: 'flex items-center justify-center' },
-                  player.is_bot && React.createElement('i', { className: 'fas fa-robot ml-2 text-blue-300' }),
-                  React.createElement('span', { className: 'text-white font-medium' }, player.username),
-                  player.user_id === user.id && React.createElement('span', { className: 'text-green-300 mr-2' }, '(אתה)')
+                  React.createElement('span', { className: 'text-white font-medium text-sm landscape:text-base' }, player.username),
+                  player.user_id === user.id && React.createElement('span', { className: 'text-green-300 mr-2 text-xs landscape:text-sm' }, '(אתה)')
                 ) :
-                React.createElement('span', { className: 'text-gray-400' }, 'מחכה לשחקן...')
+                React.createElement('span', { className: 'text-gray-400 text-sm landscape:text-base' }, 'מחכה לשחקן...')
             );
           })
         ),
         
-        // Start game button (for room owner)
+        // Start game button (for room owner) - more compact
         room?.owner_id === user.id && players.length === room?.max_players &&
         React.createElement('button', {
           onClick: startGame,
-          className: 'px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-green-700 transition-all'
+          className: 'px-6 py-2 landscape:px-8 landscape:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold rounded-lg hover:from-green-600 hover:to-green-700 transition-all text-sm landscape:text-base'
         }, 'התחל משחק'),
         
         // Waiting animation
         players.length < (room?.max_players || 0) &&
         React.createElement('div', { className: 'flex justify-center' },
           React.createElement('div', {
-            className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-white'
+            className: 'animate-spin rounded-full h-6 w-6 landscape:h-8 landscape:w-8 border-b-2 border-white'
           })
         )
       )
