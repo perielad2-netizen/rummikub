@@ -87,11 +87,44 @@ app.get('/', (c) => {
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link href="/static/styles.css" rel="stylesheet">
         <style>
+          /* Mobile landscape optimization - NO SCROLLING */
+          body, html {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+          }
+          
+          #root {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+          }
+          
           /* Mobile-first responsive design */
           @media (orientation: landscape) and (max-height: 640px) {
             .game-container {
               height: 100vh;
               overflow: hidden;
+            }
+            
+            /* AuthScreen landscape optimization */
+            .auth-landscape {
+              height: 100vh !important;
+              width: 100vw !important;
+              overflow: hidden !important;
+              padding: 8px !important;
+            }
+            
+            .auth-container-landscape {
+              max-width: none !important;
+              max-height: none !important;
+              width: 100% !important;
+              height: calc(100vh - 16px) !important;
+              display: flex !important;
+              flex-direction: row-reverse !important;
+              align-items: stretch !important;
+              gap: 24px !important;
+              padding: 16px !important;
             }
           }
           
