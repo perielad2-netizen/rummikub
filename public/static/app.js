@@ -645,6 +645,15 @@ function GameSelectionScreen({ onSelectGame }) {
   return React.createElement('div', {
     className: 'min-h-screen p-4'
   },
+    // Fullscreen Toggle Button
+    React.createElement('button', {
+      onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
+      className: 'fullscreen-btn',
+      title: 'מסך מלא'
+    },
+      React.createElement('i', { className: 'fas fa-expand' })
+    ),
+    
     // Header
     React.createElement('div', {
       className: 'flex justify-between items-center mb-8 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
