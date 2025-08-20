@@ -22,7 +22,7 @@ gameRoutes.post('/room/create', async (c) => {
     }
 
     const body = await c.req.json()
-    const { gameType, entryPoints, maxPlayers, isPrivate } = body
+    const { gameType, entryPoints, maxPlayers, isPrivate, roomName } = body
 
     // Validate input
     if (!['rummy31', 'rummyannette'].includes(gameType)) {
@@ -63,9 +63,9 @@ gameRoutes.post('/room/create', async (c) => {
 
     // Create room
     const roomResult = await c.env.DB.prepare(`
-      INSERT INTO game_rooms (room_key, owner_id, game_type, entry_points, max_players, is_private, status)
-      VALUES (?, ?, ?, ?, ?, ?, 'waiting')
-    `).bind(roomKey, authUser.userId, gameType, entryPoints, maxPlayers, isPrivate ? 1 : 0).run()
+      INSERT INTO game_rooms (room_key, owner_id, game_type, entry_points, max_players, is_private, room_name, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'waiting')
+    `).bind(roomKey, authUser.userId, gameType, entryPoints, maxPlayers, isPrivate ? 1 : 0, roomName || null).run()
 
     if (!roomResult.success) {
       throw new Error('Failed to create room')
@@ -87,7 +87,8 @@ gameRoutes.post('/room/create', async (c) => {
         gameType,
         entryPoints,
         maxPlayers,
-        isPrivate
+        isPrivate,
+        roomName
       }
     })
 
