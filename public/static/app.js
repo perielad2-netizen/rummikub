@@ -495,10 +495,10 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
   };
   
   return React.createElement('div', {
-    className: 'min-h-screen h-screen flex items-center justify-center p-2 landscape:p-1'
+    className: 'min-h-screen flex items-center justify-center p-4 landscape:p-6'
   },
     React.createElement('div', {
-      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full h-full max-w-none max-h-none landscape:max-w-5xl landscape:max-h-full landscape:w-auto landscape:h-full landscape:min-h-full p-6 landscape:p-6 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-6'
+      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full max-w-md landscape:max-w-4xl landscape:h-3/5 p-6 landscape:p-8 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-8'
     },
       // PWA Install Button (positioned at top-right, smaller)
       React.createElement('div', { className: 'absolute top-4 right-4' },
