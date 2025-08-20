@@ -514,6 +514,23 @@ function AuthScreen({ onLogin, onRegister }) {
         }, isLogin ? t('auth.login') : t('auth.register'))
       ),
       
+      // PWA Install Button (positioned at top-left)
+      React.createElement('div', { className: 'absolute top-4 left-4' },
+        React.createElement('button', {
+          onClick: () => {
+            if (window.deferredPrompt) {
+              window.deferredPrompt.prompt();
+            } else {
+              alert('להתקנה ידנית:\n\nSafari: גש לתפריט שיתוף > הוסף למסך הבית\nChrome: תפריט דפדפן > הוסף למסך הבית');
+            }
+          },
+          className: 'bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2'
+        },
+          React.createElement('i', { className: 'fas fa-download mr-2' }),
+          'התקן אפליקציה'
+        )
+      ),
+      
       // Form
       React.createElement('form', { onSubmit: handleSubmit },
         // Username
