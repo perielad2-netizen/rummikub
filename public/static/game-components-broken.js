@@ -151,9 +151,9 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
 }
 
 // Create Room Modal Component
-// Create Room Modal Component (properly defined later at line 295)
-
 function CreateRoomModal({ gameType, onClose, onSuccess }) {
+    try {
+      const response = await APIClient.game('/room/join', { roomKey }, 'POST');
       if (response.success) {
         onJoinRoom(response.data);
       }
@@ -461,7 +461,7 @@ function JoinRoomModal({ onClose, onSuccess }) {
         React.createElement('div', { className: 'mb-6' },
           React.createElement('label', {
             className: 'block text-white mb-2'
-          }, t('room.join_private')),
+          }, 'מפתח החדר'),
           React.createElement('input', {
             type: 'text',
             value: roomKey,
@@ -472,7 +472,7 @@ function JoinRoomModal({ onClose, onSuccess }) {
           })
         ),
         
-        React.createElement('div', { className: 'flex gap-4' },
+        React.createElement('div', { className: 'flex space-x-3' },
           React.createElement('button', {
             type: 'button',
             onClick: onClose,
@@ -483,7 +483,7 @@ function JoinRoomModal({ onClose, onSuccess }) {
             type: 'submit',
             disabled: loading || roomKey.length !== 6,
             className: 'flex-1 py-2 px-4 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white rounded-lg transition-colors'
-          }, loading ? t('btn.connecting') : t('btn.join'))
+          }, loading ? 'מתחבר...' : t('btn.join'))
         )
       )
     )
