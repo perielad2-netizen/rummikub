@@ -45,7 +45,29 @@ app.get('/', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        
+        <!-- PWA Meta Tags -->
+        <meta name="application-name" content="רמיקוב">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="רמיקוב">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="msapplication-TileColor" content="#1e40af">
+        <meta name="theme-color" content="#7c3aed">
+        
         <title>רמיקוב - משחק הקלפים המותאם לנייד</title>
+        
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="/manifest.json">
+        
+        <!-- Apple Touch Icons -->
+        <link rel="apple-touch-icon" href="/static/icon-192x192.png">
+        <link rel="apple-touch-icon" sizes="192x192" href="/static/icon-192x192.png">
+        <link rel="apple-touch-icon" sizes="512x512" href="/static/icon-512x512.png">
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/icon-192x192.png">
+        <link rel="shortcut icon" href="/static/icon-192x192.png">
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
           tailwind.config = {
@@ -133,6 +155,62 @@ app.get('/', (c) => {
         
         <!-- Main application -->
         <script type="text/babel" src="/static/app.js"></script>
+        
+        <!-- Service Worker Registration & PWA -->
+        <script>
+          // Service Worker Registration
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                  console.log('SW registered: ', registration);
+                })
+                .catch((registrationError) => {
+                  console.log('SW registration failed: ', registrationError);
+                });
+            });
+          }
+          
+          // PWA Install Prompt
+          let deferredPrompt;
+          window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('PWA install prompt available');
+            e.preventDefault();
+            deferredPrompt = e;
+            window.deferredPrompt = e;
+          });
+          
+          // PWA Install Success
+          window.addEventListener('appinstalled', (evt) => {
+            console.log('PWA installed successfully');
+          });
+          
+          // Fullscreen API Support
+          function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(err => {
+                console.log('Error attempting to enable fullscreen:', err.message);
+              });
+            } else {
+              if (document.exitFullscreen) {
+                document.exitFullscreen();
+              }
+            }
+          }
+          
+          // Screen Orientation Lock
+          function lockOrientation() {
+            if (screen.orientation && screen.orientation.lock) {
+              screen.orientation.lock('landscape-primary').catch(err => {
+                console.log('Orientation lock failed:', err.message);
+              });
+            }
+          }
+          
+          // Make functions globally available
+          window.toggleFullscreen = toggleFullscreen;
+          window.lockOrientation = lockOrientation;
+        </script>
     </body>
     </html>
   `)

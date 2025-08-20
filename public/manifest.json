@@ -1,0 +1,55 @@
+{
+  "name": "רמיקוב - משחק הקלפים המותאם לנייד",
+  "short_name": "רמיקוב",
+  "description": "משחק רמיקוב מותאם במיוחד לחוויית משחק על מכשירים ניידים",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e40af",
+  "theme_color": "#7c3aed",
+  "orientation": "landscape-primary",
+  "categories": ["games", "entertainment"],
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/static/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon-512x512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/static/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png", 
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "משחק מהיר",
+      "short_name": "משחק",
+      "description": "התחל משחק מהיר",
+      "url": "/?quick=true",
+      "icons": [
+        {
+          "src": "/static/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
