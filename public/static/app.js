@@ -461,6 +461,7 @@ function AuthScreen({ onLogin, onRegister }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showInstallModal, setShowInstallModal] = useState(false);
   
   const { login, register } = useContext(AuthContext);
   const { t } = useContext(LanguageContext);
@@ -517,13 +518,7 @@ function AuthScreen({ onLogin, onRegister }) {
       // PWA Install Button (positioned at top-right, smaller)
       React.createElement('div', { className: 'absolute top-4 right-4' },
         React.createElement('button', {
-          onClick: () => {
-            if (window.deferredPrompt) {
-              window.deferredPrompt.prompt();
-            } else {
-              alert('להתקנה ידנית:\n\nSafari: גש לתפריט שיתוף > הוסף למסך הבית\nChrome: תפריט דפדפן > הוסף למסך הבית');
-            }
-          },
+          onClick: () => setShowInstallModal(true),
           className: 'bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg shadow-md transition-all text-sm'
         },
           'התקן אפליקציה'
@@ -621,6 +616,80 @@ function AuthScreen({ onLogin, onRegister }) {
           className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
         },
           React.createElement('i', { className: 'fas fa-expand' })
+        )
+      )
+    ),
+
+    // Install Modal
+    showInstallModal && React.createElement('div', {
+      className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50',
+      onClick: () => setShowInstallModal(false)
+    },
+      React.createElement('div', {
+        className: 'bg-green-500 rounded-3xl p-8 max-w-md w-full text-white text-center relative',
+        onClick: (e) => e.stopPropagation()
+      },
+        // Download Icon
+        React.createElement('div', { className: 'flex justify-center mb-4' },
+          React.createElement('div', { className: 'bg-gray-600 rounded-xl p-4 inline-block' },
+            React.createElement('i', { 
+              className: 'fas fa-download text-white text-3xl'
+            })
+          )
+        ),
+
+        // Title
+        React.createElement('h2', {
+          className: 'text-2xl font-bold mb-2'
+        }, 'התקן אפליקציה'),
+
+        // Description
+        React.createElement('p', {
+          className: 'text-green-100 mb-6 text-sm'
+        }, 'לחוויית משחק מלאה במצב מסך מלא'),
+
+        // Features with checkmarks
+        React.createElement('div', { className: 'space-y-2 mb-8 text-right' },
+          React.createElement('div', { className: 'flex items-center justify-end gap-2' },
+            React.createElement('span', { className: 'text-sm' }, 'הסטרת UI של המערכת'),
+            React.createElement('i', { className: 'fas fa-check-circle text-green-200' })
+          ),
+          React.createElement('div', { className: 'flex items-center justify-end gap-2' },
+            React.createElement('span', { className: 'text-sm' }, 'מצב אופקי אוטומטי'),
+            React.createElement('i', { className: 'fas fa-check-circle text-green-200' })
+          ),
+          React.createElement('div', { className: 'flex items-center justify-end gap-2' },
+            React.createElement('span', { className: 'text-sm' }, 'עבודה במצב offline'),
+            React.createElement('i', { className: 'fas fa-check-circle text-green-200' })
+          )
+        ),
+
+        // Install Buttons
+        React.createElement('div', { className: 'space-y-3' },
+          // Primary install button
+          React.createElement('button', {
+            onClick: () => {
+              if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                window.deferredPrompt.userChoice.then((choiceResult) => {
+                  if (choiceResult.outcome === 'accepted') {
+                    setShowInstallModal(false);
+                  }
+                });
+              } else {
+                // Show manual installation instructions
+                alert('להתקנה ידנית:\n\niOS (Safari): גש לתפריט שיתוף > הוסף למסך הבית\nAndroid (Chrome): תפריט דפדפן > הוסף למסך הבית\nDesktop: חפש כפתור התקנה בשורת הכתובת');
+                setShowInstallModal(false);
+              }
+            },
+            className: 'w-full bg-white text-green-600 font-bold py-3 px-6 rounded-xl hover:bg-green-50 transition-all'
+          }, 'התקן עכשיו'),
+
+          // Cancel button
+          React.createElement('button', {
+            onClick: () => setShowInstallModal(false),
+            className: 'w-full bg-transparent border border-white border-opacity-30 text-white font-medium py-3 px-6 rounded-xl hover:bg-white hover:bg-opacity-10 transition-all'
+          }, 'אולי מאוחר יותר')
         )
       )
     )
