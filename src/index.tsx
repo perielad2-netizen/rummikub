@@ -37,6 +37,77 @@ app.route('/api/admin', adminRoutes)
 // WebSocket upgrade handler
 app.get('/ws', websocketHandler)
 
+// Serve PWA files from public directory
+app.get('/manifest.json', (c) => {
+  return c.json({
+    "name": "רמיקוב",
+    "short_name": "רמיקוב",
+    "description": "משחק קלפי רמי מותאם לנייד עם מצב offline",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "landscape-primary",
+    "theme_color": "#7c3aed",
+    "background_color": "#1e40af",
+    "scope": "/",
+    "lang": "he",
+    "dir": "rtl",
+    "categories": ["games", "entertainment"],
+    "icons": [
+      {
+        "src": "/static/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "maskable any"
+      },
+      {
+        "src": "/static/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable any"
+      }
+    ]
+  })
+})
+
+app.get('/sw.js', (c) => {
+  return c.text(`
+// Service Worker for רמיקוב PWA
+const CACHE_NAME = 'rummikub-v1';
+const urlsToCache = [
+  '/',
+  '/static/app.js',
+  '/static/game-components.js',
+  '/static/game-board.js',
+  '/static/styles.css',
+  '/static/icon-192x192.png',
+  '/static/icon-512x512.png',
+  '/manifest.json'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+  );
+});
+  `, 200, {
+    'Content-Type': 'application/javascript',
+    'Cache-Control': 'no-cache'
+  })
+})
+
 // Main application route
 app.get('/', (c) => {
   return c.html(`

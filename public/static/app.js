@@ -612,8 +612,6 @@ function AuthScreen({ onLogin, onRegister }) {
             }, isLogin ? 'הירשם' : 'התחבר')
           )
         )
-      ),
-      
       )
     ),
 
