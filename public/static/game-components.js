@@ -219,19 +219,23 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
       )
     ),
     
-    // English and Fullscreen toggles (bottom-left, small and nice)
-    React.createElement('div', { className: 'absolute bottom-4 left-4 flex flex-col gap-2' },
-      // English toggle
+    // English and Fullscreen toggles (bottom-left of SCREEN, side-by-side, smaller)
+    React.createElement('div', { className: 'fixed bottom-4 left-4 flex flex-row gap-1 z-40' },
+      // English toggle with language functionality (needs to be passed from parent)
       React.createElement('button', {
-        className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
-      }, 'English'),
+        onClick: () => {
+          // This will need the toggleLanguage function passed from parent
+          console.log('Language toggle clicked');
+        },
+        className: 'bg-white bg-opacity-20 text-white text-xs px-1 py-0.5 rounded-sm transition-all hover:bg-opacity-30'
+      }, 'EN'),
       
       // Fullscreen toggle
       React.createElement('button', {
         onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
-        className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
+        className: 'bg-white bg-opacity-20 text-white text-xs px-1 py-0.5 rounded-sm transition-all hover:bg-opacity-30'
       },
-        React.createElement('i', { className: 'fas fa-expand' })
+        React.createElement('i', { className: 'fas fa-expand text-xs' })
       )
     ),
     
