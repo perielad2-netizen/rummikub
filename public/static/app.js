@@ -514,8 +514,8 @@ function AuthScreen({ onLogin, onRegister }) {
         }, isLogin ? t('auth.login') : t('auth.register'))
       ),
       
-      // PWA Install Button (positioned at top-left)
-      React.createElement('div', { className: 'absolute top-4 left-4' },
+      // PWA Install Button (positioned at top-right, smaller)
+      React.createElement('div', { className: 'absolute top-4 right-4' },
         React.createElement('button', {
           onClick: () => {
             if (window.deferredPrompt) {
@@ -524,9 +524,8 @@ function AuthScreen({ onLogin, onRegister }) {
               alert('להתקנה ידנית:\n\nSafari: גש לתפריט שיתוף > הוסף למסך הבית\nChrome: תפריט דפדפן > הוסף למסך הבית');
             }
           },
-          className: 'bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2'
+          className: 'bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg shadow-md transition-all text-sm'
         },
-          React.createElement('i', { className: 'fas fa-download mr-2' }),
           'התקן אפליקציה'
         )
       ),
@@ -607,6 +606,22 @@ function AuthScreen({ onLogin, onRegister }) {
             className: 'text-blue-200 hover:text-white transition-colors'
           }, isLogin ? 'עדיין לא רשום? הירשם כאן' : 'כבר רשום? התחבר כאן')
         )
+      ),
+      
+      // English and Fullscreen toggles (bottom-left, small and nice)
+      React.createElement('div', { className: 'absolute bottom-4 left-4 flex flex-col gap-2' },
+        // English toggle
+        React.createElement('button', {
+          className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
+        }, 'English'),
+        
+        // Fullscreen toggle
+        React.createElement('button', {
+          onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
+          className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
+        },
+          React.createElement('i', { className: 'fas fa-expand' })
+        )
       )
     )
   );
@@ -621,39 +636,23 @@ function GameSelectionScreen({ onSelectGame }) {
   const gameTypes = [
     {
       id: 'rummy31',
-      name: t('game.rummy31'),
+      name: 'רמי 31',
       icon: '🎯',
       enabled: true,
       description: 'המשחק הקלאסי - מטרה של 31 נקודות'
     },
     {
       id: 'rummyannette',
-      name: t('game.rummyannette'),
+      name: 'רמי אנט',
       icon: '🎲',
       enabled: true,
       description: 'משחק מהיר - 15 קלפים ורצף אחד'
-    },
-    {
-      id: 'rummy51',
-      name: t('game.rummy51'),
-      icon: '🃏',
-      enabled: false,
-      description: 'בקרוב - גרסה מתקדמת'
     }
   ];
   
   return React.createElement('div', {
     className: 'min-h-screen p-4'
   },
-    // Fullscreen Toggle Button
-    React.createElement('button', {
-      onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
-      className: 'fullscreen-btn',
-      title: 'מסך מלא'
-    },
-      React.createElement('i', { className: 'fas fa-expand' })
-    ),
-    
     // Header
     React.createElement('div', {
       className: 'flex justify-between items-center mb-8 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4'
@@ -668,36 +667,23 @@ function GameSelectionScreen({ onSelectGame }) {
       }, t('nav.logout'))
     ),
     
-    // Game selection
-    React.createElement('div', { className: 'max-w-2xl mx-auto' },
+    // Game selection - Mobile-first landscape layout
+    React.createElement('div', { className: 'flex-1 flex flex-col items-center justify-center' },
       React.createElement('h1', {
-        className: 'text-4xl font-bold text-white text-center mb-8'
+        className: 'text-3xl font-bold text-white text-center mb-6'
       }, 'בחר סוג משחק'),
       
-      React.createElement('div', { className: 'space-y-4' },
+      React.createElement('div', { className: 'grid grid-cols-2 gap-6 w-full max-w-4xl px-4' },
         gameTypes.map(game => 
           React.createElement('button', {
             key: game.id,
             onClick: () => game.enabled && onSelectGame(game.id),
             disabled: !game.enabled,
-            className: `w-full p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-xl hover:bg-opacity-20 transition-all ${game.enabled ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}`
+            className: `aspect-square p-6 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl border border-white border-opacity-20 hover:bg-opacity-20 transition-all duration-300 transform hover:scale-105 flex flex-col items-center justify-center text-center`
           },
-            React.createElement('div', { className: 'flex items-center' },
-              React.createElement('div', {
-                className: 'text-4xl ml-4'
-              }, game.icon),
-              React.createElement('div', { className: 'text-right flex-1' },
-                React.createElement('h3', {
-                  className: 'text-2xl font-bold text-white mb-2'
-                }, game.name),
-                React.createElement('p', {
-                  className: 'text-blue-200'
-                }, game.description),
-                !game.enabled && React.createElement('span', {
-                  className: 'inline-block mt-2 px-3 py-1 bg-yellow-500 bg-opacity-20 border border-yellow-400 text-yellow-200 rounded-full text-sm'
-                }, t('game.coming_soon'))
-              )
-            )
+            React.createElement('div', { className: 'text-6xl mb-4' }, game.icon),
+            React.createElement('h3', { className: 'text-xl font-bold text-white mb-2' }, game.name),
+            React.createElement('p', { className: 'text-blue-200 text-sm' }, game.description)
           )
         )
       )
