@@ -434,7 +434,7 @@ function AuthProvider({ children }) {
     try {
       const response = await APIClient.auth('/verify');
       if (response.success) {
-        const profileResponse = await APIClient.auth('/profile');
+        const profileResponse = await APIClient.request('/auth/profile');
         if (profileResponse.success) {
           setUser(profileResponse.data);
         }

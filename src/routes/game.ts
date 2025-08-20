@@ -64,8 +64,8 @@ gameRoutes.post('/room/create', async (c) => {
     // Create room
     const roomResult = await c.env.DB.prepare(`
       INSERT INTO game_rooms (room_key, owner_id, game_type, entry_points, max_players, is_private, room_name, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'waiting')
-    `).bind(roomKey, authUser.userId, gameType, entryPoints, maxPlayers, isPrivate ? 1 : 0, roomName || null).run()
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(roomKey, authUser.userId, gameType, entryPoints, maxPlayers, isPrivate ? 1 : 0, roomName || null, 'waiting').run()
 
     if (!roomResult.success) {
       throw new Error('Failed to create room')
@@ -76,8 +76,8 @@ gameRoutes.post('/room/create', async (c) => {
     // Add owner as first player
     await c.env.DB.prepare(`
       INSERT INTO room_players (room_id, user_id, username, is_bot, position, hand)
-      VALUES (?, ?, ?, 0, 0, '[]')
-    `).bind(roomId, authUser.userId, authUser.username, '[]').run()
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(roomId, authUser.userId, authUser.username, 0, 0, '[]').run()
 
     return c.json<ApiResponse>({
       success: true,
