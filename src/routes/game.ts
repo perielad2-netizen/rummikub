@@ -450,3 +450,99 @@ gameRoutes.get('/state/:roomId', async (c) => {
     }, 500)
   }
 })
+
+// Add bot to room (auto-join service)
+gameRoutes.post('/room/:roomId/add-bot', async (c) => {
+  try {
+    const authUser = await requireAuth(c.req.header('Authorization'))
+    if (!authUser) {
+      return c.json<ApiResponse>({
+        success: false,
+        error: 'נדרש אישור זהות'
+      }, 401)
+    }
+
+    const roomId = c.req.param('roomId')
+
+    // Get room details
+    const room = await c.env.DB.prepare(
+      'SELECT * FROM game_rooms WHERE id = ? AND status = ?'
+    ).bind(roomId, 'waiting').first() as any
+
+    if (!room) {
+      return c.json<ApiResponse>({
+        success: false,
+        error: 'חדר לא נמצא או לא זמין'
+      }, 404)
+    }
+
+    // Check if room owner is making the request
+    if (room.owner_id !== authUser.userId) {
+      return c.json<ApiResponse>({
+        success: false,
+        error: 'רק בעל החדר יכול להוסיף בוטים'
+      }, 403)
+    }
+
+    // Check current player count
+    const currentPlayers = await c.env.DB.prepare(
+      'SELECT COUNT(*) as count FROM room_players WHERE room_id = ?'
+    ).bind(roomId).first() as any
+
+    if (currentPlayers.count >= room.max_players) {
+      return c.json<ApiResponse>({
+        success: false,
+        error: 'החדר מלא'
+      }, 400)
+    }
+
+    // Get available bot nicknames (prefer unused ones)
+    let botNicknames = await c.env.DB.prepare(
+      'SELECT nickname FROM bot_nicknames WHERE used_recently = 0 ORDER BY RANDOM() LIMIT 1'
+    ).first() as any
+
+    // If no unused nicknames, get any
+    if (!botNicknames) {
+      botNicknames = await c.env.DB.prepare(
+        'SELECT nickname FROM bot_nicknames ORDER BY RANDOM() LIMIT 1'
+      ).first() as any
+    }
+
+    // Fallback bot names if no bot_nicknames exist
+    const fallbackNames = ['בוט חכם', 'בוט מנצח', 'בוט מהיר', 'בוט חזק', 'בוט מקצועי']
+    const botName = botNicknames?.nickname || fallbackNames[Math.floor(Math.random() * fallbackNames.length)]
+
+    // Mark nickname as used
+    if (botNicknames) {
+      await c.env.DB.prepare(
+        'UPDATE bot_nicknames SET used_recently = 1 WHERE nickname = ?'
+      ).bind(botName).run()
+    }
+
+    // Add bot to room
+    const nextPosition = currentPlayers.count
+    await c.env.DB.prepare(
+      'INSERT INTO room_players (room_id, user_id, username, is_bot, position, hand) VALUES (?, ?, ?, ?, ?, ?)'
+    ).bind(roomId, null, botName, 1, nextPosition, '[]').run()
+
+    // Update room current players count
+    await c.env.DB.prepare(
+      'UPDATE game_rooms SET current_players = current_players + 1 WHERE id = ?'
+    ).bind(roomId).run()
+
+    return c.json<ApiResponse>({
+      success: true,
+      data: {
+        message: `${botName} הצטרף לחדר`,
+        botName
+      }
+    })
+
+  } catch (error) {
+    console.error('Add bot error:', error)
+    return c.json<ApiResponse>({
+      success: false,
+      error: 'שגיאה בהוספת בוט'
+    }, 500)
+  }
+})
