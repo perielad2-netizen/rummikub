@@ -2,6 +2,7 @@
 function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showRoomsModal, setShowRoomsModal] = useState(false);
   const [publicRooms, setPublicRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   
@@ -54,71 +55,55 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
       }, `${user.points} ${t('game.points')}`)
     ),
     
-    // Room options
-    React.createElement('div', { className: 'max-w-2xl mx-auto space-y-4' },
-      // Create Private Room
-      React.createElement('button', {
-        onClick: () => setShowCreateModal(true),
-        className: 'w-full p-6 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-xl hover:from-green-600 hover:to-green-700 transition-all'
-      },
-        React.createElement('div', { className: 'flex items-center justify-center text-white' },
-          React.createElement('i', { className: 'fas fa-plus-circle text-2xl ml-4' }),
-          React.createElement('span', { className: 'text-xl font-bold' }, t('room.create_private'))
-        )
-      ),
-      
-      // Join Private Room
-      React.createElement('button', {
-        onClick: () => setShowJoinModal(true),
-        className: 'w-full p-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-xl hover:from-blue-600 hover:to-blue-700 transition-all'
-      },
-        React.createElement('div', { className: 'flex items-center justify-center text-white' },
-          React.createElement('i', { className: 'fas fa-key text-2xl ml-4' }),
-          React.createElement('span', { className: 'text-xl font-bold' }, t('room.join_private'))
-        )
-      ),
-      
-      // Public Rooms List
-      React.createElement('div', {
-        className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6'
-      },
-        React.createElement('h3', {
-          className: 'text-xl font-bold text-white mb-4 flex items-center'
+    // Room options - Mobile-first 4 buttons layout
+    React.createElement('div', { className: 'flex-1 flex flex-col items-center justify-center px-4' },
+      React.createElement('div', { className: 'w-full max-w-md space-y-4' },
+        // Create Private Room
+        React.createElement('button', {
+          onClick: () => setShowCreateModal(true),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105'
         },
-          React.createElement('i', { className: 'fas fa-users ml-2' }),
-          t('room.join_public')
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-plus-circle text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'צור חדר פרטי')
+          )
         ),
         
-        loading ? 
-          React.createElement('div', { className: 'text-center py-8' },
-            React.createElement('div', {
-              className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto'
-            })
-          ) :
-          publicRooms.length === 0 ?
-            React.createElement('p', {
-              className: 'text-blue-200 text-center py-8'
-            }, 'אין חדרים ציבוריים זמינים כרגע') :
-            React.createElement('div', { className: 'space-y-3' },
-              publicRooms.map(room =>
-                React.createElement('div', {
-                  key: room.id,
-                  className: 'bg-white bg-opacity-10 rounded-xl p-4 flex items-center justify-between'
-                },
-                  React.createElement('div', { className: 'text-white' },
-                    React.createElement('div', { className: 'font-semibold' }, room.owner_name),
-                    React.createElement('div', { className: 'text-sm text-blue-200' },
-                      `${gameTypeNames[room.game_type]} • ${room.entry_points} נקודות • ${room.current_players}/${room.max_players} שחקנים`
-                    )
-                  ),
-                  React.createElement('button', {
-                    onClick: () => joinPublicRoom(room.room_key),
-                    disabled: room.current_players >= room.max_players,
-                    className: 'px-4 py-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-500 disabled:cursor-not-allowed text-white rounded-lg transition-colors'
-                  }, room.current_players >= room.max_players ? 'מלא' : t('btn.join'))
-                )
-              )
-            )
+        // Join Private Room
+        React.createElement('button', {
+          onClick: () => setShowJoinModal(true),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-key text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'הצטרף לחדר פרטי')
+          )
+        ),
+        
+        // Quick Play
+        React.createElement('button', {
+          onClick: () => handleQuickPlay(),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl shadow-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-flash text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'משחק מהיר')
+          )
+        ),
+        
+        // Available Rooms
+        React.createElement('button', {
+          onClick: () => setShowRoomsModal(true),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all transform hover:scale-105 relative'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-users text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'רשימת החדרים הציבוריים')
+          ),
+          publicRooms.length > 0 && React.createElement('div', {
+            className: 'absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'
+          }, publicRooms.length)
+        )
       )
     ),
     
@@ -145,6 +130,130 @@ function RoomSelectionScreen({ gameType, onBack, onJoinRoom }) {
       alert(error.message);
     }
   };
+
+  const handleQuickPlay = async () => {
+    if (publicRooms.length > 0) {
+      // Join the first available room
+      const availableRoom = publicRooms.find(room => room.current_players < room.max_players);
+      if (availableRoom) {
+        joinPublicRoom(availableRoom.room_key);
+      } else {
+        alert('אין חדרים זמינים כרגע');
+      }
+    } else {
+      alert('אין חדרים ציבוריים זמינים');
+    }
+  };
+
+  return React.createElement('div', {
+    className: 'min-h-screen flex flex-col'
+  },
+    // Header
+    React.createElement('div', {
+      className: 'flex items-center justify-between p-4 bg-white bg-opacity-10 backdrop-blur-lg'
+    },
+      React.createElement('button', {
+        onClick: onBack,
+        className: 'flex items-center text-white hover:text-blue-200 transition-colors'
+      },
+        React.createElement('i', { className: 'fas fa-arrow-right mr-2' }),
+        'חזור'
+      ),
+      React.createElement('h1', {
+        className: 'text-xl font-bold text-white'
+      }, gameType === 'rummy31' ? 'רמי 31' : 'רמי אנט'),
+      React.createElement('div', {
+        className: 'text-white text-sm'
+      }, `${user.points} נק'`)
+    ),
+    
+    // Room options - Mobile-first 4 buttons layout
+    React.createElement('div', { className: 'flex-1 flex flex-col items-center justify-center px-4' },
+      React.createElement('div', { className: 'w-full max-w-md space-y-4' },
+        // Create Private Room
+        React.createElement('button', {
+          onClick: () => setShowCreateModal(true),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-plus-circle text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'צור חדר פרטי')
+          )
+        ),
+        
+        // Join Private Room
+        React.createElement('button', {
+          onClick: () => setShowJoinModal(true),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-key text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'הצטרף לחדר פרטי')
+          )
+        ),
+        
+        // Quick Play
+        React.createElement('button', {
+          onClick: () => handleQuickPlay(),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl shadow-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-bolt text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'משחק מהיר')
+          )
+        ),
+        
+        // Available Rooms
+        React.createElement('button', {
+          onClick: () => setShowRoomsModal(true),
+          className: 'w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all transform hover:scale-105 relative'
+        },
+          React.createElement('div', { className: 'flex items-center justify-center text-white' },
+            React.createElement('i', { className: 'fas fa-users text-xl ml-3' }),
+            React.createElement('span', { className: 'text-lg font-bold' }, 'רשימת החדרים הציבוריים')
+          ),
+          publicRooms.length > 0 && React.createElement('div', {
+            className: 'absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'
+          }, publicRooms.length)
+        )
+      )
+    ),
+    
+    // English and Fullscreen toggles (bottom-left, small and nice)
+    React.createElement('div', { className: 'absolute bottom-4 left-4 flex flex-col gap-2' },
+      // English toggle
+      React.createElement('button', {
+        className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
+      }, 'English'),
+      
+      // Fullscreen toggle
+      React.createElement('button', {
+        onClick: () => window.toggleFullscreen && window.toggleFullscreen(),
+        className: 'bg-white bg-opacity-20 text-white text-xs px-2 py-1 rounded-md transition-all hover:bg-opacity-30'
+      },
+        React.createElement('i', { className: 'fas fa-expand' })
+      )
+    ),
+    
+    // Modals
+    showCreateModal && React.createElement(CreateRoomModal, {
+      gameType,
+      onClose: () => setShowCreateModal(false),
+      onSuccess: onJoinRoom
+    }),
+    
+    showJoinModal && React.createElement(JoinRoomModal, {
+      onClose: () => setShowJoinModal(false),
+      onSuccess: onJoinRoom
+    }),
+    
+    showRoomsModal && React.createElement(AvailableRoomsModal, {
+      rooms: publicRooms,
+      loading,
+      onClose: () => setShowRoomsModal(false),
+      onJoinRoom: joinPublicRoom
+    })
+  );
 }
 
 // Create Room Modal Component
@@ -339,6 +448,63 @@ function JoinRoomModal({ onClose, onSuccess }) {
           }, loading ? 'מתחבר...' : t('btn.join'))
         )
       )
+    )
+  );
+}
+
+// Available Rooms Modal Component
+function AvailableRoomsModal({ rooms, loading, onClose, onJoinRoom }) {
+  return React.createElement('div', {
+    className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'
+  },
+    React.createElement('div', {
+      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 w-full max-w-md max-h-[80vh] overflow-y-auto'
+    },
+      React.createElement('h3', {
+        className: 'text-xl font-bold text-white mb-4 flex items-center justify-between'
+      }, 
+        'חדרים זמינים',
+        React.createElement('button', {
+          onClick: onClose,
+          className: 'text-white hover:text-red-300 transition-colors'
+        },
+          React.createElement('i', { className: 'fas fa-times' })
+        )
+      ),
+      
+      loading ? 
+        React.createElement('div', { className: 'text-center py-8' },
+          React.createElement('div', {
+            className: 'animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto'
+          })
+        ) :
+        rooms.length === 0 ?
+          React.createElement('p', {
+            className: 'text-blue-200 text-center py-8'
+          }, 'אין חדרים ציבוריים זמינים כרגע') :
+          React.createElement('div', { className: 'space-y-3' },
+            rooms.map(room =>
+              React.createElement('div', {
+                key: room.id,
+                className: 'bg-white bg-opacity-10 rounded-xl p-4 flex items-center justify-between'
+              },
+                React.createElement('div', { className: 'text-white' },
+                  React.createElement('div', { className: 'font-semibold' }, room.room_name || room.owner_name),
+                  React.createElement('div', { className: 'text-sm text-blue-200' },
+                    `${room.entry_points} נקודות • ${room.current_players}/${room.max_players} שחקנים`
+                  )
+                ),
+                React.createElement('button', {
+                  onClick: () => {
+                    onJoinRoom(room.room_key);
+                    onClose();
+                  },
+                  disabled: room.current_players >= room.max_players,
+                  className: 'px-4 py-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-500 disabled:cursor-not-allowed text-white rounded-lg transition-colors'
+                }, room.current_players >= room.max_players ? 'מלא' : 'הצטרף')
+              )
+            )
+          )
     )
   );
 }
