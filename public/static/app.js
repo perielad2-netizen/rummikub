@@ -498,7 +498,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
     className: 'min-h-screen flex items-center justify-center p-4 landscape:p-2'
   },
     React.createElement('div', {
-      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full h-full max-w-none max-h-none landscape:max-w-6xl landscape:max-h-96 landscape:w-auto landscape:h-auto p-8 landscape:p-8 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-10'
+      className: 'bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl w-full h-full max-w-none max-h-none landscape:max-w-5xl landscape:max-h-full landscape:w-auto landscape:h-5/6 p-8 landscape:p-8 shadow-2xl landscape:flex landscape:items-stretch landscape:gap-8'
     },
       // PWA Install Button (positioned at top-right, smaller)
       React.createElement('div', { className: 'absolute top-4 right-4' },
@@ -512,7 +512,7 @@ function AuthScreen({ onLogin, onRegister, toggleLanguage }) {
       
       // Right side - Header (RTL layout) - REMOVED TITLE
       React.createElement('div', { 
-        className: 'text-center landscape:text-right landscape:flex-shrink-0 landscape:w-80 landscape:flex landscape:flex-col landscape:justify-center mb-6 landscape:mb-0' 
+        className: 'text-center landscape:text-right landscape:flex-shrink-0 landscape:w-64 landscape:flex landscape:flex-col landscape:justify-center mb-6 landscape:mb-0' 
       },
         React.createElement('p', {
           className: 'text-blue-200 text-xl landscape:text-2xl font-medium'
